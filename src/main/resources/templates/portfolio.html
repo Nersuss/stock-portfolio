@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ваш портфель</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body class="bg-light bg-gradient">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-dark rounded" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Grow INVEST</a>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Обзор</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tools">Инструменты</a>
+                    </li>
+                    <div sec:authorize="!isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link disabled" aria-disabled="true" href="/portfolio">Портфель</a>
+                        </li>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/portfolio">Портфель</a>
+                        </li>
+                    </div>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
+                </form>
+                <div sec:authorize="!isAuthenticated()">
+                    <a href="/login">
+                        <button class="btn btn-outline-success me-2" type="submit">Вход</button>
+                    </a>
+                    <a href="/register">
+                        <button class="btn btn-outline-success" type="submit">Регистрация</button>
+                    </a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a class="nav-item me-2" href="/portfolio"><span sec:authentication="name">Username</span></a>
+                    <a href="/logout">
+                        <button class="btn btn-outline-success" type="submit">Выйти</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="row justify-content-md-center mt-3">
+        <div class="col-6 text-center">
+            <h5>Ваш портфель</h5>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-evenly mt-3">
+        <div class="col-sm-2 card">
+            <div class="card-body">
+                <p class="card-text">Стоимость портфеля</p>
+                <h5 class="card-title" th:text="${portfolioCost} + ' $'"></h5>
+            </div>
+        </div>
+        <div class="col-sm-2 card">
+            <div class="card-body">
+                <p class="card-text">Прогноз</p>
+                <h5 class="card-title">12 456₽</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 justify-content-md-center">
+        <div class="col-3">
+            <h5 class="text-center">Акции</h5>
+            <canvas id="stocksDoughnut"></canvas>
+            <script>
+                const ctx = document.getElementById('stocksDoughnut');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            'SBER',
+                            'AAPL',
+                            'VTBR',
+                            'SBER1',
+                            'AAPL2',
+                            'VTBR3'
+                        ],
+                        datasets: [{
+                            label: '%',
+                            data: [30, 50, 20, 30, 50, 20],
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(55, 99, 132)',
+                                'rgb(542, 162, 235)',
+                                'rgb(255, 92, 32)',
+                                'rgb(205, 5, 862)'
+                            ],
+                            hoverOffset: 10
+                        }]
+                    }
+                });
+            </script>
+        </div>
+        <div class="col-7">
+            <table class="table">
+                <thead class="table-light">
+                <tr>
+                    <td scope="col">Акция</td>
+                    <td scope="col">Кол&#8209;во</td>
+                    <td scope="col">Стоимость</td>
+                    <td scope="col">Прогноз</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${stocks.empty}">
+                    <td colspan="2"> No Stocks Available</td>
+                </tr>
+                <tr th:each="stock : ${stocks}">
+                    <td><span th:text="${stock.symbol}"></span></td>
+                    <td><span th:text="${stock.count}"></span></td>
+                    <td><span th:text="${stock.cost}"></span></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="/portfolio/edit">
+                <button type="button" class="btn btn-primary">Редактировать портфель</button>
+            </a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-9 text-center">
+            <h5>Аналитика портфеля</h5>
+            <p>Прогноз стоимости - рост</p>
+            <p>Стоимость портфеля - 957 232₽</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
