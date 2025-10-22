@@ -27,7 +27,7 @@ public class AlphaVantage {
 
     String API_KEY = "ETYJF8AVBD4G6WO2"; //  FBHPMXR7LC2AVHK0   ZEBSZMBM169YX5Z7
 
-    @Value("classpath:response/get_AAPL_WEEKLY_HALF.json")
+    @Value("classpath:response/get_IBM_DAILY.json")
     Resource AAPL_WEEKLY_STUB;
     public StockPricesDto getPricesBySymbolAndPeriod(@NonNull String symbol, @NonNull String period) throws IOException {
 //        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_%s&symbol=%s&apikey=%s&datatype=json".formatted(period, symbol, API_KEY);

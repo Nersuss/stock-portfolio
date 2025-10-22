@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.dto.AddStockDto;
+import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.PortfolioDto;
-import ru.nersus.stock.dto.api.GlobalQuoteDto;
 import ru.nersus.stock.dto.api.StockPricesDto;
 import ru.nersus.stock.service.StockService;
 import ru.nersus.stock.service.UserService;
@@ -32,18 +32,17 @@ public class MainController {
     UserService userService;
 
     @GetMapping("/")
-    String getLanding(@RequestParam(required = false) String symbol,
-                      @RequestParam(required = false) String period,
+    String getLanding(@RequestParam(required = false) String symbol, @RequestParam(required = false) String period,
                       Model model) throws IOException {
         if (StringUtils.isEmpty(symbol) || StringUtils.isEmpty(period)) {
             return "redirect:/?symbol=AAPL&period=WEEKLY";
         }
 
-        StockPricesDto stockPricesDto = stockService.getPricesBySymbolAndPeriod(symbol, period);
-        GlobalQuoteDto stockInfoDto = stockService.getStockInfoBySymbol(symbol);
-        model.addAttribute("stockLabels", stockPricesDto.getLabels());
-        model.addAttribute("stockPrices", stockPricesDto.getOpenPrices());
-        model.addAttribute("stockInfo", stockInfoDto);
+        LandingDto landingDto = stockService.getLanding(symbol);
+        model.addAttribute("stockLabels", landingDto.stockDateLabels());
+        model.addAttribute("stockPrices", landingDto.stockOpenPrices());
+        model.addAttribute("stockInfo", landingDto.stockInfo());
+        model.addAttribute("indicators", landingDto.techIndicators());
         return "landing";
     }
 

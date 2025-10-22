@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import ru.nersus.stock.calculation.TechIndicatorsResults;
+import ru.nersus.stock.dto.LandingDto;
+import ru.nersus.stock.dto.TechIndicatorsDto;
 import ru.nersus.stock.dto.api.BestMatchesDto;
 import ru.nersus.stock.dto.api.GlobalQuoteDto;
 import ru.nersus.stock.dto.api.StockPricesDto;
@@ -22,6 +25,13 @@ public class StockService {
 
     StockRepo stockRepo;
     AlphaVantage alphaVantage;
+
+    public LandingDto getLanding(String symbol) throws IOException {
+        GlobalQuoteDto info = getStockInfoBySymbol(symbol);
+        StockPricesDto prices = getPricesBySymbolAndPeriod(symbol, "DAILY");
+        TechIndicatorsDto indicators = TechIndicatorsResults.getIndicators(prices.getFullPrices());
+        return new LandingDto(info, prices.getLabels(), prices.getOpenPrices(), indicators);
+    }
 
     public StockPricesDto getPricesBySymbolAndPeriod(String symbol, String period) throws IOException {
         return alphaVantage.getPricesBySymbolAndPeriod(symbol, period);

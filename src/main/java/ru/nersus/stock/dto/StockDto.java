@@ -1,8 +1,11 @@
 package ru.nersus.stock.dto;
 
+import ru.nersus.stock.dto.api.GlobalQuoteDto;
+
 public record StockDto(
         String symbol,
-        int cost,
-        int count
+        double cost,
+        int count,
+        GlobalQuoteDto info
 ) {
 }

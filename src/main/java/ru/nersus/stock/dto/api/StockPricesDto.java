@@ -19,7 +19,7 @@ public class StockPricesDto {
     @SerializedName("Meta Data")
     MetaDataDto metaDataDto;
 
-    @SerializedName("Weekly Time Series")
+    @SerializedName("Time Series (Daily)")
     Map<String, TimeSeriesDto> timeSeriesDto;
 
     public List<String> getLabels() {
@@ -32,6 +32,9 @@ public class StockPricesDto {
             openPrices.add(dto.open);
         }
         return openPrices;
+    }
+    public List<TimeSeriesDto> getFullPrices() {
+        return new ArrayList<>(timeSeriesDto.values());
     }
 
 }

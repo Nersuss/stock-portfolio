@@ -10,6 +10,7 @@ import ru.nersus.stock.dto.AddStockDto;
 import ru.nersus.stock.dto.LoginDto;
 import ru.nersus.stock.dto.PortfolioDto;
 import ru.nersus.stock.dto.StockDto;
+import ru.nersus.stock.dto.api.GlobalQuoteDto;
 import ru.nersus.stock.entity.Stock;
 import ru.nersus.stock.entity.User;
 import ru.nersus.stock.repo.AlphaVantage;
@@ -49,17 +50,18 @@ public class UserService {
     }
 
     public PortfolioDto getPortfolio(String email) throws IOException {
-        List<Stock> stocks = stockRepo.getStockByOwner_Email(email);
+        List<Stock> userStocks = stockRepo.getStockByOwner_Email(email);
+
         List<StockDto> stockDtos = new ArrayList<>();
+//        List<GlobalQuoteDto> stockInfos = new ArrayList<>();
+
         double portfolioCost = 0;
-        for (Stock stock : stocks) {
-            portfolioCost += alphaVantage.getStockInfoBySymbol(stock.getSymbol()).price();
-            stockDtos.add(new StockDto(stock.getSymbol(), 150, stock.getCount()));
+        for (Stock stock : userStocks) {
+//            stockInfos.add(alphaVantage.getStockInfoBySymbol(stock.getSymbol()));
+            GlobalQuoteDto stockInfoBySymbol = alphaVantage.getStockInfoBySymbol(stock.getSymbol());
+            stockDtos.add(new StockDto(stock.getSymbol(), stockInfoBySymbol.previousClose(), stock.getCount(), stockInfoBySymbol));
         }
 
-        if (stocks.isEmpty()) {
-            throw new UsernameNotFoundException("No stocks in portfolio");
-        }
         return new PortfolioDto(portfolioCost, stockDtos);
     }
 

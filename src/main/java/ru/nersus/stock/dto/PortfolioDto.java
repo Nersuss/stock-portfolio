@@ -3,8 +3,10 @@ package ru.nersus.stock.dto;
 import java.util.List;
 
 public record PortfolioDto(
-        double cost,
+        Double cost,
         List<StockDto> stocks
 
-        ) {
+
+
+) {
 }
