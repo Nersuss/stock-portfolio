@@ -27,10 +27,11 @@ public class StockService {
     AlphaVantage alphaVantage;
 
     public LandingDto getLanding(String symbol) throws IOException {
-        GlobalQuoteDto info = getStockInfoBySymbol(symbol);
-        StockPricesDto prices = getPricesBySymbolAndPeriod(symbol, "DAILY");
-        TechIndicatorsDto indicators = TechIndicatorsResults.getIndicators(prices.getFullPrices());
-        return new LandingDto(info, prices.getLabels(), prices.getOpenPrices(), indicators);
+        GlobalQuoteDto stockInfo = getStockInfoBySymbol(symbol);
+        StockPricesDto stockPrices = getPricesBySymbolAndPeriod(symbol, "DAILY");
+        TechIndicatorsDto indicators = TechIndicatorsResults.getIndicators(stockPrices.getFullPrices());
+
+        return new LandingDto(stockInfo, stockPrices.getLabels(), stockPrices.getOpenPrices(), indicators);
     }
 
     public StockPricesDto getPricesBySymbolAndPeriod(String symbol, String period) throws IOException {

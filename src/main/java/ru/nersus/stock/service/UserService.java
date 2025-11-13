@@ -53,13 +53,12 @@ public class UserService {
         List<Stock> userStocks = stockRepo.getStockByOwner_Email(email);
 
         List<StockDto> stockDtos = new ArrayList<>();
-//        List<GlobalQuoteDto> stockInfos = new ArrayList<>();
 
         double portfolioCost = 0;
         for (Stock stock : userStocks) {
-//            stockInfos.add(alphaVantage.getStockInfoBySymbol(stock.getSymbol()));
             GlobalQuoteDto stockInfoBySymbol = alphaVantage.getStockInfoBySymbol(stock.getSymbol());
             stockDtos.add(new StockDto(stock.getSymbol(), stockInfoBySymbol.previousClose(), stock.getCount(), stockInfoBySymbol));
+            portfolioCost += stockInfoBySymbol.price() * stock.getCount();
         }
 
         return new PortfolioDto(portfolioCost, stockDtos);

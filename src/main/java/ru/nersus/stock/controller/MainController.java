@@ -17,7 +17,6 @@ import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.dto.AddStockDto;
 import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.PortfolioDto;
-import ru.nersus.stock.dto.api.StockPricesDto;
 import ru.nersus.stock.service.StockService;
 import ru.nersus.stock.service.UserService;
 
@@ -57,16 +56,6 @@ public class MainController {
     @GetMapping("/portfolio/edit")
     String getPortfolioEdit() {
         return "portfolio-edit";
-    }
-
-    @GetMapping("/stock")
-    StockPricesDto getStockPrices(@RequestParam(required = false) String symbol, @RequestParam(required = false) String period) throws IOException {
-        StockPricesDto pricesBySymbolAndPeriod = stockService.getPricesBySymbolAndPeriod(symbol, period);
-
-        if (pricesBySymbolAndPeriod != null) {
-            return pricesBySymbolAndPeriod;
-        }
-        throw new NullPointerException();
     }
 
     @PostMapping("/portfolio/stock/add")

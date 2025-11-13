@@ -23,12 +23,12 @@ public class StockPricesDto {
     Map<String, TimeSeriesDto> timeSeriesDto;
 
     public List<String> getLabels() {
-        return timeSeriesDto.keySet().stream().toList();
+        return timeSeriesDto.keySet().stream().limit(30).toList();
     }
 
     public List<Double> getOpenPrices() {
         List<Double> openPrices = new ArrayList<>();
-        for (TimeSeriesDto dto: timeSeriesDto.values()) {
+        for (TimeSeriesDto dto: timeSeriesDto.values().stream().limit(30).toList()) {
             openPrices.add(dto.open);
         }
         return openPrices;

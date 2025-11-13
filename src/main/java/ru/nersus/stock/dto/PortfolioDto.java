@@ -6,7 +6,5 @@ public record PortfolioDto(
         Double cost,
         List<StockDto> stocks
 
-
-
 ) {
 }

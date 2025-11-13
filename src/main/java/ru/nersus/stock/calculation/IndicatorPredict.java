@@ -13,5 +13,4 @@ public enum IndicatorPredict {
 
     @Getter
     private final String value;
-
 }
