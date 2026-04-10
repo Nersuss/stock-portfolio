@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RestApiController {
+public class ApiController {
     StockService stockService;
 
     @GetMapping("/api/stocks")
