@@ -65,7 +65,7 @@
         <div class="col-sm-2 card">
             <div class="card-body">
                 <p class="card-text">Стоимость портфеля</p>
-                <h5 class="card-title" th:text="${portfolioCost} + ' $'"></h5>
+                <h5 class="card-title" th:text="${portfolio.cost} + ' $'"></h5>
             </div>
         </div>
         <div class="col-sm-2 card">
@@ -115,10 +115,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${stocks.empty}">
+                <tr th:if="${portfolio.stocks.empty}">
                     <td colspan="2"> No Stocks Available</td>
                 </tr>
-                <tr th:unless="${stocks.empty}" th:each="stock : ${stocks}">
+                <tr th:unless="${portfolio.stocks.empty}" th:each="stock : ${portfolio.stocks}">
                     <td><span th:text="${stock.symbol}"></span></td>
                     <td><span th:text="${stock.count}"></span></td>
                     <td><span th:text="${stock.cost}"></span></td>

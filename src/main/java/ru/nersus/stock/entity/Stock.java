@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"owner", "symbol"})})
+//@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"owner", "symbol"})})
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -38,6 +38,7 @@ public class MainController {
         }
 
         LandingDto landingDto = stockService.getLanding(symbol);
+        //model.addAttribute("landing", landingDto);
         model.addAttribute("stockLabels", landingDto.stockDateLabels());
         model.addAttribute("stockPrices", landingDto.stockOpenPrices());
         model.addAttribute("stockInfo", landingDto.stockInfo());
@@ -48,8 +49,7 @@ public class MainController {
     @GetMapping("/portfolio")
     String getPortfolio(Principal principal, Model model) throws IOException {
         PortfolioDto portfolio = userService.getPortfolio(principal.getName());
-        model.addAttribute("stocks", portfolio.stocks());
-        model.addAttribute("portfolioCost", portfolio.cost());
+        model.addAttribute("portfolio", portfolio);
         return "portfolio";
     }
 
