@@ -61,15 +61,15 @@
         <div class="col-3 offset-md-1">
             <div class="card mt-4" style="width: 20rem;">
                 <div class="card-body">
-                    <h3 class="card-title fw-semibold" th:text=${stockInfo.symbol}>IBM</h3>
+                    <h3 class="card-title fw-semibold" th:text=${landing.info.symbol}>IBM</h3>
                     <span class="card-subtitle mb-2 fs-4 fw-semibold"
-                          th:text="${stockInfo.price} + ' $  '">234.5213 $   </span>
-                    <span th:classappend="${stockInfo.change >= 0} ? text-success : text-danger" class="card-text fs-5"
-                          th:text="${stockInfo.change}">-4.5100</span>
-                    <span th:classappend="${stockInfo.change >= 0} ? text-success : text-danger" class="card-text fs-5"
-                          th:text="${stockInfo.changePercent}">-1.5423%</span>
+                          th:text="${landing.info.price} + ' $  '">234.5213 $   </span>
+                    <span th:classappend="${landing.info.change >= 0} ? text-success : text-danger" class="card-text fs-5"
+                          th:text="${landing.info.change}">-4.5100</span>
+                    <span th:classappend="${landing.info.change >= 0} ? text-success : text-danger" class="card-text fs-5"
+                          th:text="${landing.info.changePercent}">-1.5423%</span>
                     <h6 class="card-subtitle mb-2 text-body-secondary mt-2"
-                        th:text="'Последний день торгов: ' + ${stockInfo.latestTradingDay}">Последний день торгов:
+                        th:text="'Последний день торгов: ' + ${landing.info.latestTradingDay}">Последний день торгов:
                         30.09.2025</h6>
                 </div>
             </div>
@@ -126,8 +126,8 @@
             <script th:inline="javascript">
                 /*<![CDATA[*/
                 // Получаем данные из модели
-                const labels = /*[[${stockLabels}]]*/ [];
-                const prices = /*[[${stockPrices}]]*/ [];
+                const labels = /*[[${landing.dates}]]*/ [];
+                const prices = /*[[${landing.prices}]]*/ [];
 
                 // Преобразуем цены в числа (если они пришли как строки)
                 const numericPrices = prices.map(price => parseFloat(price));
@@ -138,7 +138,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: '[[${stockInfo.symbol}]]',
+                            label: '[[${landing.info.symbol}]]',
                             data: numericPrices,
                             fill: false,
                             borderColor: 'rgb(255, 60, 60)',
@@ -195,13 +195,13 @@
                     <tbody>
                     <tr>
                         <th scope="row">Индекс относительной силы (RSI)</th>
-                        <td th:text="${indicators.rsi.predict.getValue()}">Продавать</td>
-                        <td th:text="${indicators.rsi.rawValue}">55.42</td>
+                        <td th:text="${landing.indicators.rsi.predict.getValue()}">Продавать</td>
+                        <td th:text="${landing.indicators.rsi.rawValue}">55.42</td>
                     </tr>
                     <tr>
                         <th scope="row">Стохастик</th>
-                        <td th:text="${indicators.stochastic.predict.getValue()}">Продавать</td>
-                        <td th:text="${indicators.stochastic.rawValue}">55.42</td>
+                        <td th:text="${landing.indicators.stochastic.predict.getValue()}">Продавать</td>
+                        <td th:text="${landing.indicators.stochastic.rawValue}">55.42</td>
                     </tr>
                     <tr>
                         <th scope="row">Моментум</th>

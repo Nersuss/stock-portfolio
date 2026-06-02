@@ -4,9 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +25,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MainController {
+
     StockService stockService;
     UserService userService;
 
@@ -38,11 +37,7 @@ public class MainController {
         }
 
         LandingDto landingDto = stockService.getLanding(symbol);
-        //model.addAttribute("landing", landingDto);
-        model.addAttribute("stockLabels", landingDto.stockDateLabels());
-        model.addAttribute("stockPrices", landingDto.stockOpenPrices());
-        model.addAttribute("stockInfo", landingDto.stockInfo());
-        model.addAttribute("indicators", landingDto.techIndicators());
+        model.addAttribute("landing", landingDto);
         return "landing";
     }
 
@@ -54,15 +49,22 @@ public class MainController {
     }
 
     @GetMapping("/portfolio/edit")
-    String getPortfolioEdit() {
+    String getPortfolioEdit(Principal principal, Model model) throws IOException {
+        PortfolioDto portfolio = userService.getPortfolio(principal.getName());
+        model.addAttribute("portfolio", portfolio);
         return "portfolio-edit";
     }
 
     @PostMapping("/portfolio/stock/add")
     String addStock(@ModelAttribute("addStockDto") AddStockDto addStockDto, @AuthenticationPrincipal MyUserDetails myUserDetails) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         userService.addStockByEmail(addStockDto, myUserDetails);
         return "redirect:/portfolio";
+    }
+
+    @PostMapping("/portfolio/stock/delete")
+    String deleteStock(@RequestParam int id, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        //userService.addStockByEmail(addStockDto, myUserDetails);
+        return "redirect:/portfolio/edit";
     }
 
 }

@@ -1,4 +1,4 @@
-package ru.nersus.stock.repo;
+package ru.nersus.stock.dao;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +40,10 @@ public class AlphaVantage {
     @Value("classpath:response/symbol_search_BA.json")
     Resource symbol_search_BA_STUB;
     public BestMatchesDto getSymbolsByChars(@NonNull String chars) throws IOException {
-//        String url = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=%s&datatype=json".formatted(chars, API_KEY);
-//        String json = restTemplate.getForObject(url, String.class);
-        String jsonContent = Files.readString(Path.of(symbol_search_BA_STUB.getFile().getPath()));
-        return gson.fromJson(jsonContent, BestMatchesDto.class);
+        String url = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=%s&datatype=json".formatted(chars, API_KEY);
+        String json = restTemplate.getForObject(url, String.class);
+        //String json = Files.readString(Path.of(symbol_search_BA_STUB.getFile().getPath()));
+        return gson.fromJson(json, BestMatchesDto.class);
 
 //        return gson.fromJson(stubRp2, BestMatchesDto.class);
     }
@@ -53,8 +53,8 @@ public class AlphaVantage {
     public GlobalQuoteDto getStockInfoBySymbol(@NonNull String symbol) throws IOException {
 //        String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=%s&datatype=json".formatted(symbol, API_KEY);
 //        String json = restTemplate.getForObject(url, String.class);
-        String jsonContent = Files.readString(Path.of(IBM_INFO_STUB.getFile().getPath()));
-        return gson.fromJson(jsonContent, GlobalQuoteRpDto.class).globalQuote();
+        String json = Files.readString(Path.of(IBM_INFO_STUB.getFile().getPath()));
+        return gson.fromJson(json, GlobalQuoteRpDto.class).globalQuote();
     }
 
 }

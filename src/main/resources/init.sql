@@ -6,10 +6,9 @@ CREATE TABLE public.users (
 );
 
 CREATE TABLE public.stock (
-	id SERIAL PRIMARY_KEY,
+	id SERIAL PRIMARY KEY,
 	count INTEGER NOT NULL,
 	owner_id INTEGER NULL,
 	symbol varchar(255) NOT NULL,
-	CONSTRAINT stock_pkey PRIMARY KEY (id),
 	FOREIGN KEY (owner_id) REFERENCES public.users (id)
 );

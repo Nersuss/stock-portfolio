@@ -3,13 +3,12 @@ package ru.nersus.stock.config;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.entity.User;
-import ru.nersus.stock.repo.UserDao;
+import ru.nersus.stock.dao.UserDao;
 
 import java.util.Optional;
 

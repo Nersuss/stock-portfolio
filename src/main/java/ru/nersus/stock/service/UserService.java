@@ -13,9 +13,9 @@ import ru.nersus.stock.dto.StockDto;
 import ru.nersus.stock.dto.api.GlobalQuoteDto;
 import ru.nersus.stock.entity.Stock;
 import ru.nersus.stock.entity.User;
-import ru.nersus.stock.repo.AlphaVantage;
-import ru.nersus.stock.repo.StockRepo;
-import ru.nersus.stock.repo.UserDao;
+import ru.nersus.stock.dao.AlphaVantage;
+import ru.nersus.stock.dao.StockDao;
+import ru.nersus.stock.dao.UserDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class UserService {
 
     UserDao userDao;
-    StockRepo stockRepo;
+    StockDao stockDao;
     AlphaVantage alphaVantage;
 
     public User findUserByEmailAndPassword(LoginDto loginDto) {
@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public void addStockByEmail(AddStockDto addStockDto, MyUserDetails myUserDetails) {
-        stockRepo.save(
+        stockDao.addByUserId(
                 new Stock(null,
                         addStockDto.symbol(),
                         addStockDto.count(),
@@ -49,14 +49,14 @@ public class UserService {
     }
 
     public PortfolioDto getPortfolio(String email) throws IOException {
-        List<Stock> userStocks = stockRepo.getStocksByEmail(email);
+        List<Stock> userStocks = stockDao.getStocksByEmail(email);
 
         List<StockDto> stockDtos = new ArrayList<>();
 
         double portfolioCost = 0;
         for (Stock stock : userStocks) {
             GlobalQuoteDto stockInfoBySymbol = alphaVantage.getStockInfoBySymbol(stock.symbol());
-            stockDtos.add(new StockDto(stock.symbol(), stockInfoBySymbol.previousClose(), stock.count(), stockInfoBySymbol));
+            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stockInfoBySymbol.previousClose(), stock.count(), stockInfoBySymbol));
             portfolioCost += stockInfoBySymbol.price() * stock.count();
         }
 

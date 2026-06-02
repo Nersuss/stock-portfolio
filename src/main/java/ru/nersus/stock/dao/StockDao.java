@@ -1,4 +1,4 @@
-package ru.nersus.stock.repo;
+package ru.nersus.stock.dao;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class StockRepo {
+public class StockDao {
 
     NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -33,7 +33,8 @@ public class StockRepo {
         );
     }
 
-    public void save(Stock stock) {
+    public void addByUserId(Stock stock) {
+        @Language("SQL")
         String sql = """
                 INSERT INTO public.stock (symbol, count, owner_id) VALUES (:symbol, :count, :owner_id);
                 """;

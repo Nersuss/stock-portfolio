@@ -5,14 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.calculation.TechIndicatorsResults;
+import ru.nersus.stock.dao.AlphaVantage;
 import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.TechIndicatorsDto;
 import ru.nersus.stock.dto.api.BestMatchesDto;
 import ru.nersus.stock.dto.api.GlobalQuoteDto;
 import ru.nersus.stock.dto.api.StockPricesDto;
 import ru.nersus.stock.dto.api.StockSearchDto;
-import ru.nersus.stock.repo.AlphaVantage;
-import ru.nersus.stock.repo.StockRepo;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StockService {
 
-    StockRepo stockRepo;
     AlphaVantage alphaVantage;
 
     public LandingDto getLanding(String symbol) throws IOException {

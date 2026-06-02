@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.nersus.stock.dto.LoginDto;
-import ru.nersus.stock.dto.LoginRpDto;
 import ru.nersus.stock.service.AuthService;
 
 @Controller
@@ -29,8 +28,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    LoginRpDto registration(@ModelAttribute("loginDto") LoginDto loginDto) {
-        return authService.registerUser(loginDto);
+    void registration(@ModelAttribute("loginDto") LoginDto loginDto) {
+        authService.registerUser(loginDto);
     }
 
 }

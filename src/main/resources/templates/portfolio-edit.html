@@ -134,48 +134,19 @@
                 <tr>
                     <td scope="col">Акция</td>
                     <td scope="col">Кол&#8209;во</td>
-                    <td scope="col">Куплено</td>
-                    <td scope="col">Вложено</td>
-                    <td scope="col">Стоимость</td>
-                    <td scope="col">Прогноз</td>
-                    <td scope="col">Доходность</td>
-                    <td scope="col">Часть?</td>
-                    <td scope="col">Убрать</td>
+                    <td scope="col">Цена</td>
+                    <td scope="col">Удалить</td>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>XYZ</td>
-                    <td>2</td>
-                    <td>22.04.2003</td>
-                    <td>12₽</td>
-                    <td>12₽</td>
-                    <td>-></td>
-                    <td>50₽</td>
-                    <td>12%</td>
-                    <td>❌</td>
+                <tr th:if="${portfolio.stocks.empty}">
+                    <td colspan="2">Вы не добавили ни одной акции.</td>
                 </tr>
-                <tr>
-                    <td>XYZ</td>
-                    <td>2</td>
-                    <td>22.04.2003</td>
-                    <td>12₽</td>
-                    <td>12₽</td>
-                    <td>-></td>
-                    <td>50₽</td>
-                    <td>12%</td>
-                    <td>❌</td>
-                </tr>
-                <tr>
-                    <td>XYZ</td>
-                    <td>2</td>
-                    <td>22.04.2003</td>
-                    <td>12₽</td>
-                    <td>12₽</td>
-                    <td>-></td>
-                    <td>50₽</td>
-                    <td>12%</td>
-                    <td>❌</td>
+                <tr th:unless="${portfolio.stocks.empty}" th:each="stock : ${portfolio.stocks}">
+                    <td><span th:text="${stock.symbol}"></span></td>
+                    <td><span th:text="${stock.count}"></span></td>
+                    <td><span th:text="${stock.cost}"></span></td>
+                    <td><a th:href="'/portfolio/stock/delete/' + ${stock.id}">❌</a></td>
                 </tr>
                 </tbody>
             </table>

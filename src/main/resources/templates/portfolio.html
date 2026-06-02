@@ -116,7 +116,7 @@
                 </thead>
                 <tbody>
                 <tr th:if="${portfolio.stocks.empty}">
-                    <td colspan="2"> No Stocks Available</td>
+                    <td colspan="2">Вы не добавили ни одной акции.</td>
                 </tr>
                 <tr th:unless="${portfolio.stocks.empty}" th:each="stock : ${portfolio.stocks}">
                     <td><span th:text="${stock.symbol}"></span></td>
@@ -134,7 +134,7 @@
         <div class="col-9 text-center">
             <h5>Аналитика портфеля</h5>
             <p>Прогноз стоимости - рост</p>
-            <p>Стоимость портфеля - 957 232₽</p>
+            <p th:text="'Стоимость портфеля - ' + ${portfolio.cost} + ' ₽'"></p>
         </div>
     </div>
 </div>

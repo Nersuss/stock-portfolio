@@ -1,8 +1,9 @@
-package ru.nersus.stock.repo;
+package ru.nersus.stock.dao;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.intellij.lang.annotations.Language;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 import ru.nersus.stock.dto.RegisterRqDto;
 import ru.nersus.stock.entity.User;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class UserDao {
     }
 
     public Boolean existByEmail(String email) {
+        @Language("SQL")
         String sql = """
                 SELECT EXISTS (SELECT 1 FROM public.users u WHERE u.email = :email);
                 """;
@@ -39,27 +41,30 @@ public class UserDao {
     }
 
     public Optional<User> findByEmail(String email) {
+        @Language("SQL")
         String sql = """
                 SELECT id, email, password FROM public.users u WHERE u.email = :email;
                 """;
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+        List<User> users = jdbcTemplate.query(sql,
                 new MapSqlParameterSource()
                         .addValue("email", email),
                 new DataClassRowMapper<>(User.class)
-        ));
+        );
+        return users.stream().findFirst();
     }
 
     public void registerUser(RegisterRqDto registerRqDto) {
+        @Language("SQL")
         String sql = """
-                INSERT INTO public.users (email, password, balance, card_number) VALUES (:email, :password, :balance, :cardNumber);
+                INSERT INTO public.users (email, password) VALUES (:email, :password);
                 """;
         jdbcTemplate.update(sql,
                 new MapSqlParameterSource()
                         .addValue("email", registerRqDto.login())
-                        .addValue("password", bCryptPasswordEncoder().encode(registerRqDto.password()))
-                        .addValue("balance", 100)
-                        .addValue("cardNumber", UUID.randomUUID())
+                        .addValue("password", bCryptPasswordEncoder().encode(registerRqDto.password()
+                                )
+                        )
         );
     }
 
