@@ -63,4 +63,7 @@ public class UserService {
         return new PortfolioDto(portfolioCost, stockDtos);
     }
 
+    public void deleteStockById(int id, MyUserDetails myUserDetails) {
+        stockDao.deleteStockById(id, myUserDetails);
+    }
 }

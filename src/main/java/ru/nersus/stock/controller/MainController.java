@@ -63,7 +63,7 @@ public class MainController {
 
     @PostMapping("/portfolio/stock/delete")
     String deleteStock(@RequestParam int id, @AuthenticationPrincipal MyUserDetails myUserDetails) {
-        //userService.addStockByEmail(addStockDto, myUserDetails);
+        userService.deleteStockById(id, myUserDetails);
         return "redirect:/portfolio/edit";
     }
 

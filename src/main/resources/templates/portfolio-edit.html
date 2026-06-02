@@ -140,13 +140,18 @@
                 </thead>
                 <tbody>
                 <tr th:if="${portfolio.stocks.empty}">
-                    <td colspan="2">Вы не добавили ни одной акции.</td>
+                    <td colspan="2">В вашем портфеле пока нет акций.</td>
                 </tr>
                 <tr th:unless="${portfolio.stocks.empty}" th:each="stock : ${portfolio.stocks}">
                     <td><span th:text="${stock.symbol}"></span></td>
                     <td><span th:text="${stock.count}"></span></td>
                     <td><span th:text="${stock.cost}"></span></td>
-                    <td><a th:href="'/portfolio/stock/delete/' + ${stock.id}">❌</a></td>
+                    <td>
+                        <form th:action="'/portfolio/stock/delete?id=' + ${stock.id}"
+                              method="POST">
+                            <button type="submit">❌</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
