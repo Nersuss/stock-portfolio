@@ -1,15 +1,48 @@
 package ru.nersus.stock.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.intellij.lang.annotations.Language;
+import org.springframework.jdbc.core.DataClassRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 import ru.nersus.stock.entity.Stock;
 
 import java.util.List;
 
-@Repository
-public interface StockRepo extends JpaRepository<Stock, Long> {
+@Component
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class StockRepo {
 
-    List<Stock> getStockByOwner_Email(String email);
+    NamedParameterJdbcTemplate jdbcTemplate;
 
-//    Stock saveByUserEmail(Stock stock, String email);
+    public List<Stock> getStocksByEmail(String email) {
+        @Language("SQL")
+        String sql = """
+                SELECT s.id, symbol, count, owner_id FROM public.stock s 
+                JOIN public.users u ON u.id=s.owner_id WHERE u.email = :email;
+                """;
+
+        return jdbcTemplate.query(sql,
+                new MapSqlParameterSource()
+                        .addValue("email", email),
+                new DataClassRowMapper<>(Stock.class)
+        );
+    }
+
+    public void save(Stock stock) {
+        String sql = """
+                INSERT INTO public.stock (symbol, count, owner_id) VALUES (:symbol, :count, :owner_id);
+                """;
+        jdbcTemplate.update(sql,
+                new MapSqlParameterSource()
+                        .addValue("symbol", stock.symbol())
+                        .addValue("count", stock.count())
+                        .addValue("owner_id", stock.ownerId())
+        );
+    }
+
 }

@@ -15,7 +15,7 @@ import ru.nersus.stock.entity.Stock;
 import ru.nersus.stock.entity.User;
 import ru.nersus.stock.repo.AlphaVantage;
 import ru.nersus.stock.repo.StockRepo;
-import ru.nersus.stock.repo.UserRepo;
+import ru.nersus.stock.repo.UserDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,12 +27,12 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
 
-    UserRepo userRepo;
+    UserDao userDao;
     StockRepo stockRepo;
     AlphaVantage alphaVantage;
 
     public User findUserByEmailAndPassword(LoginDto loginDto) {
-        Optional<User> user = userRepo.findByEmailAndLogin(loginDto.getEmail(), loginDto.getPassword());
+        Optional<User> user = userDao.findByEmail(loginDto.getEmail());
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -44,21 +44,20 @@ public class UserService {
                 new Stock(null,
                         addStockDto.symbol(),
                         addStockDto.count(),
-                        new User(myUserDetails.getId(),
-                                myUserDetails.getUsername(),
-                                null)));
+                        myUserDetails.getId()
+                ));
     }
 
     public PortfolioDto getPortfolio(String email) throws IOException {
-        List<Stock> userStocks = stockRepo.getStockByOwner_Email(email);
+        List<Stock> userStocks = stockRepo.getStocksByEmail(email);
 
         List<StockDto> stockDtos = new ArrayList<>();
 
         double portfolioCost = 0;
         for (Stock stock : userStocks) {
-            GlobalQuoteDto stockInfoBySymbol = alphaVantage.getStockInfoBySymbol(stock.getSymbol());
-            stockDtos.add(new StockDto(stock.getSymbol(), stockInfoBySymbol.previousClose(), stock.getCount(), stockInfoBySymbol));
-            portfolioCost += stockInfoBySymbol.price() * stock.getCount();
+            GlobalQuoteDto stockInfoBySymbol = alphaVantage.getStockInfoBySymbol(stock.symbol());
+            stockDtos.add(new StockDto(stock.symbol(), stockInfoBySymbol.previousClose(), stock.count(), stockInfoBySymbol));
+            portfolioCost += stockInfoBySymbol.price() * stock.count();
         }
 
         return new PortfolioDto(portfolioCost, stockDtos);
