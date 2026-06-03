@@ -25,7 +25,7 @@ public class AlphaVantage {
     @Autowired
     RestTemplate restTemplate;
 
-    String API_KEY = "ETYJF8AVBD4G6WO2"; //  FBHPMXR7LC2AVHK0   ZEBSZMBM169YX5Z7
+    String API_KEY = "ZEBSZMBM169YX5Z7"; //  FBHPMXR7LC2AVHK0   ZEBSZMBM169YX5Z7 ETYJF8AVBD4G6WO2
 
     @Value("classpath:response/get_IBM_DAILY.json")
     Resource AAPL_WEEKLY_STUB;
@@ -33,8 +33,8 @@ public class AlphaVantage {
 //        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_%s&symbol=%s&apikey=%s&datatype=json".formatted(period, symbol, API_KEY);
 //        String json = restTemplate.getForObject(url, String.class);
 //        return gson.fromJson(json, StockPricesDto.class);
-        String jsonContent = Files.readString(Path.of(AAPL_WEEKLY_STUB.getFile().getPath()));
-        return gson.fromJson(jsonContent, StockPricesDto.class);
+        String json = Files.readString(Path.of(AAPL_WEEKLY_STUB.getFile().getPath()));
+        return gson.fromJson(json, StockPricesDto.class);
     }
 
     @Value("classpath:response/symbol_search_BA.json")

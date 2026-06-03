@@ -8,7 +8,7 @@ CREATE TABLE public.users (
 CREATE TABLE public.stock (
 	id SERIAL PRIMARY KEY,
 	count INTEGER NOT NULL,
-	owner_id INTEGER NULL,
-	symbol varchar(255) NOT NULL,
+	owner_id INTEGER NOT NULL,
+	symbol VARCHAR(255) NOT NULL,
 	FOREIGN KEY (owner_id) REFERENCES public.users (id)
 );
