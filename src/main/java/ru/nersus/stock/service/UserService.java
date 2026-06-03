@@ -6,18 +6,17 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.config.MyUserDetails;
+import ru.nersus.stock.dao.MoexApi;
+import ru.nersus.stock.dao.StockDao;
+import ru.nersus.stock.dao.UserDao;
 import ru.nersus.stock.dto.AddStockDto;
 import ru.nersus.stock.dto.LoginDto;
 import ru.nersus.stock.dto.PortfolioDto;
 import ru.nersus.stock.dto.StockDto;
-import ru.nersus.stock.dto.api.GlobalQuoteDto;
+import ru.nersus.stock.dto.api.SecurityDescription;
 import ru.nersus.stock.entity.Stock;
 import ru.nersus.stock.entity.User;
-import ru.nersus.stock.dao.AlphaVantage;
-import ru.nersus.stock.dao.StockDao;
-import ru.nersus.stock.dao.UserDao;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class UserService {
 
     UserDao userDao;
     StockDao stockDao;
-    AlphaVantage alphaVantage;
+    MoexApi moexApi;
 
     public User findUserByEmailAndPassword(LoginDto loginDto) {
         Optional<User> user = userDao.findByEmail(loginDto.getEmail());
@@ -48,16 +47,16 @@ public class UserService {
                 ));
     }
 
-    public PortfolioDto getPortfolio(String email) throws IOException {
+    public PortfolioDto getPortfolio(String email) {
         List<Stock> userStocks = stockDao.getStocksByEmail(email);
 
         List<StockDto> stockDtos = new ArrayList<>();
 
         double portfolioCost = 0;
         for (Stock stock : userStocks) {
-            GlobalQuoteDto stockInfoBySymbol = alphaVantage.getStockInfoBySymbol(stock.symbol());
-            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stockInfoBySymbol.previousClose(), stock.count(), stockInfoBySymbol));
-            portfolioCost += stockInfoBySymbol.price() * stock.count();
+            SecurityDescription stockInfoBySymbol = moexApi.getStockInfoBySymbol(stock.symbol());
+            stockDtos.add(new StockDto(stock.id(), stock.symbol(), 5, stock.count(), stockInfoBySymbol));
+            portfolioCost += 5 * stock.count();
         }
 
         return new PortfolioDto(portfolioCost, stockDtos);

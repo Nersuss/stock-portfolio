@@ -61,16 +61,16 @@
         <div class="col-3 offset-md-1">
             <div class="card mt-4" style="width: 20rem;">
                 <div class="card-body">
-                    <h3 class="card-title fw-semibold" th:text=${landing.info.symbol}>IBM</h3>
+                    <h3 class="card-title fw-semibold" th:text=${landing.info.name}>IBM</h3>
                     <span class="card-subtitle mb-2 fs-4 fw-semibold"
-                          th:text="${landing.info.price} + ' $  '">234.5213 $   </span>
-                    <span th:classappend="${landing.info.change >= 0} ? text-success : text-danger" class="card-text fs-5"
-                          th:text="${landing.info.change}">-4.5100</span>
-                    <span th:classappend="${landing.info.change >= 0} ? text-success : text-danger" class="card-text fs-5"
-                          th:text="${landing.info.changePercent}">-1.5423%</span>
-                    <h6 class="card-subtitle mb-2 text-body-secondary mt-2"
-                        th:text="'Последний день торгов: ' + ${landing.info.latestTradingDay}">Последний день торгов:
-                        30.09.2025</h6>
+                          th:text="${landing.price?.last} + ' $  '">234.5213 $   </span>
+                    <span th:classappend="${landing.price?.lastChange >= 0} ? text-success : text-danger" class="card-text fs-5"
+                          th:text="${landing.price?.lastChange}">-4.5100</span>
+                    <span th:classappend="${landing.price?.lastChange >= 0} ? text-success : text-danger" class="card-text fs-5"
+                          th:text="${landing.price?.lastChangePrcnt}">-1.5423%</span>
+<!--                    <h6 class="card-subtitle mb-2 text-body-secondary mt-2"-->
+<!--                        th:text="'Последний день торгов: ' + ${landing.info.latestTradingDay}">Последний день торгов:-->
+<!--                        30.09.2025</h6>-->
                 </div>
             </div>
         </div>
@@ -126,8 +126,10 @@
             <script th:inline="javascript">
                 /*<![CDATA[*/
                 // Получаем данные из модели
-                const labels = /*[[${landing.dates}]]*/ [];
-                const prices = /*[[${landing.prices}]]*/ [];
+                const candles = /*[[${landing.candles}]]*/ [];
+
+                const labels = candles.map(candle => candle.begin);
+                const prices = candles.map(candle => candle.close);
 
                 // Преобразуем цены в числа (если они пришли как строки)
                 const numericPrices = prices.map(price => parseFloat(price));
@@ -138,7 +140,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: '[[${landing.info.symbol}]]',
+                            label: '[[${landing.info.shortname}]]',
                             data: numericPrices,
                             fill: false,
                             borderColor: 'rgb(255, 60, 60)',

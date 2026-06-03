@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.calculation.TechIndicatorsResults;
-import ru.nersus.stock.dao.AlphaVantage;
+import ru.nersus.stock.dao.MoexApi;
 import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.TechIndicatorsDto;
-import ru.nersus.stock.dto.api.BestMatchesDto;
-import ru.nersus.stock.dto.api.GlobalQuoteDto;
-import ru.nersus.stock.dto.api.StockPricesDto;
-import ru.nersus.stock.dto.api.StockSearchDto;
+import ru.nersus.stock.dto.api.*;
 
-import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,31 +19,36 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StockService {
 
-    AlphaVantage alphaVantage;
+    MoexApi moexApi;
 
-    public LandingDto getLanding(String symbol) throws IOException {
-        GlobalQuoteDto stockInfo = getStockInfoBySymbol(symbol);
-        StockPricesDto stockPrices = getPricesBySymbolAndPeriod(symbol, "DAILY");
-        TechIndicatorsDto indicators = TechIndicatorsResults.getIndicators(stockPrices.getFullPrices());
+    public LandingDto getLanding(String symbol, LocalDate from) {
+        SecurityDescription stockInfo = getStockInfoBySymbol(symbol);
+        StockPrice stockPrice = getStockPriceBySymbol(symbol);
+        List<Candle> stockPrices = getPricesBySymbolAndPeriod(symbol, from);
+        TechIndicatorsDto indicators = TechIndicatorsResults.getIndicators(stockPrices);
 
-        return new LandingDto(stockInfo, stockPrices.getLabels(), stockPrices.getOpenPrices(), indicators);
+        return new LandingDto(stockInfo, stockPrice, stockPrices, indicators);
     }
 
-    public StockPricesDto getPricesBySymbolAndPeriod(String symbol, String period) throws IOException {
-        return alphaVantage.getPricesBySymbolAndPeriod(symbol, period);
+    public List<Candle> getPricesBySymbolAndPeriod(String symbol, LocalDate period) {
+        return moexApi.getPricesBySymbolAndPeriod(symbol, period);
     }
 
-    public List<StockSearchDto> getSymbolsByChars(String chars) throws IOException {
-        BestMatchesDto symbolsByChars = alphaVantage.getSymbolsByChars(chars);
-        return symbolsByChars.bestMatches().stream().map(stock -> new StockSearchDto(
-                stock.symbol(),
-                stock.name(),
-                "/?symbol=" + stock.symbol() + "&period=WEEKLY"
+    public List<StockSearchDto> getSymbolsByChars(String chars) {
+        MoexSecuritiesRp symbolsByChars = moexApi.getSymbolsByChars(chars);
+        List<SecurityInfo> securityInfos = symbolsByChars.securities().data().stream().map(SecurityInfo::fromList).toList();
+        return securityInfos.stream().map(stock -> new StockSearchDto(
+                stock.shortname(),
+                stock.shortname(),
+                "/?symbol=" + stock.secid() + "&from=2026-01-01"
         )).collect(Collectors.toList());
     }
 
-    public GlobalQuoteDto getStockInfoBySymbol(String chars) throws IOException {
-        return alphaVantage.getStockInfoBySymbol(chars);
+    public SecurityDescription getStockInfoBySymbol(String symbol) {
+        return moexApi.getStockInfoBySymbol(symbol);
+    }
+    public StockPrice getStockPriceBySymbol(String symbol) {
+        return moexApi.getStockPriceBySymbol(symbol);
     }
 
 }

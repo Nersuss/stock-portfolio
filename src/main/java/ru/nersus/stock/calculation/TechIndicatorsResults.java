@@ -2,18 +2,18 @@ package ru.nersus.stock.calculation;
 
 import ru.nersus.stock.dto.IndicatorValue;
 import ru.nersus.stock.dto.TechIndicatorsDto;
-import ru.nersus.stock.dto.api.TimeSeriesDto;
+import ru.nersus.stock.dto.api.Candle;
 
 import java.util.List;
 
 public class TechIndicatorsResults {
 
-    public static TechIndicatorsDto getIndicators(List<TimeSeriesDto> prices) {
+    public static TechIndicatorsDto getIndicators(List<Candle> prices) {
 
-        List<Double> openPrices = prices.stream().map(TimeSeriesDto::getOpen).toList();
-        List<Double> lowPrices = prices.stream().map(TimeSeriesDto::getLow).toList();
-        List<Double> highPrices = prices.stream().map(TimeSeriesDto::getHigh).toList();
-        Double close = prices.getLast().getClose();
+        List<Double> openPrices = prices.stream().map(Candle::open).toList();
+        List<Double> lowPrices = prices.stream().map(Candle::low).toList();
+        List<Double> highPrices = prices.stream().map(Candle::high).toList();
+        Double close = prices.getLast().close();
 
         return new TechIndicatorsDto(
                 rsi(openPrices),

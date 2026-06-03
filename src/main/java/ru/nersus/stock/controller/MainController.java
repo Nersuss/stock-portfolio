@@ -20,6 +20,7 @@ import ru.nersus.stock.service.UserService;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,13 +31,13 @@ public class MainController {
     UserService userService;
 
     @GetMapping("/")
-    String getLanding(@RequestParam(required = false) String symbol, @RequestParam(required = false) String period,
-                      Model model) throws IOException {
-        if (StringUtils.isEmpty(symbol) || StringUtils.isEmpty(period)) {
-            return "redirect:/?symbol=AAPL&period=WEEKLY";
+    String getLanding(@RequestParam(required = false) String symbol, @RequestParam(required = false) String from,
+                      Model model) {
+        if (StringUtils.isEmpty(symbol) || StringUtils.isEmpty(from)) {
+            return "redirect:/?symbol=AFLT&from=2026-01-01";
         }
 
-        LandingDto landingDto = stockService.getLanding(symbol);
+        LandingDto landingDto = stockService.getLanding(symbol, LocalDate.parse(from));
         model.addAttribute("landing", landingDto);
         return "landing";
     }
