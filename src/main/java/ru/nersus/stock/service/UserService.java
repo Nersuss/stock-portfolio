@@ -14,6 +14,7 @@ import ru.nersus.stock.dto.LoginDto;
 import ru.nersus.stock.dto.PortfolioDto;
 import ru.nersus.stock.dto.StockDto;
 import ru.nersus.stock.dto.api.SecurityDescription;
+import ru.nersus.stock.dto.api.StockPrice;
 import ru.nersus.stock.entity.Stock;
 import ru.nersus.stock.entity.User;
 
@@ -55,8 +56,9 @@ public class UserService {
         double portfolioCost = 0;
         for (Stock stock : userStocks) {
             SecurityDescription stockInfoBySymbol = moexApi.getStockInfoBySymbol(stock.symbol());
-            stockDtos.add(new StockDto(stock.id(), stock.symbol(), 5, stock.count(), stockInfoBySymbol));
-            portfolioCost += 5 * stock.count();
+            StockPrice stockPrice = moexApi.getStockPriceBySymbol(stock.symbol());
+            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stockPrice.closePrice(), stock.count(), stockInfoBySymbol));
+            portfolioCost += stockPrice.closePrice() * stock.count();
         }
 
         return new PortfolioDto(portfolioCost, stockDtos);

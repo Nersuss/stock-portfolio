@@ -18,7 +18,6 @@ import ru.nersus.stock.dto.PortfolioDto;
 import ru.nersus.stock.service.StockService;
 import ru.nersus.stock.service.UserService;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 
@@ -43,14 +42,14 @@ public class MainController {
     }
 
     @GetMapping("/portfolio")
-    String getPortfolio(Principal principal, Model model) throws IOException {
+    String getPortfolio(Principal principal, Model model) {
         PortfolioDto portfolio = userService.getPortfolio(principal.getName());
         model.addAttribute("portfolio", portfolio);
         return "portfolio";
     }
 
     @GetMapping("/portfolio/edit")
-    String getPortfolioEdit(Principal principal, Model model) throws IOException {
+    String getPortfolioEdit(Principal principal, Model model) {
         PortfolioDto portfolio = userService.getPortfolio(principal.getName());
         model.addAttribute("portfolio", portfolio);
         return "portfolio-edit";
