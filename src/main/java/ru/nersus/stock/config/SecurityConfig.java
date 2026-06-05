@@ -35,7 +35,6 @@ public class SecurityConfig {
                 )
                 .userDetailsService(myUserDetailsService)
                 .httpBasic(withDefaults());
-
         return http.build();
     }
 

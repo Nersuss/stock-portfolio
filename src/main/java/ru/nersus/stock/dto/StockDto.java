@@ -6,7 +6,7 @@ public record StockDto(
         int id,
         String symbol,
         double cost,
-        int count,
+        Integer count,
         SecurityDescription info
 ) {
 }

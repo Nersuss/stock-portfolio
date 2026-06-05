@@ -55,10 +55,11 @@ public class UserService {
 
         double portfolioCost = 0;
         for (Stock stock : userStocks) {
-            SecurityDescription stockInfoBySymbol = moexApi.getStockInfoBySymbol(stock.symbol());
+            SecurityDescription stockInfo = moexApi.getStockInfoBySymbol(stock.symbol());
             StockPrice stockPrice = moexApi.getStockPriceBySymbol(stock.symbol());
-            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stockPrice.closePrice(), stock.count(), stockInfoBySymbol));
-            portfolioCost += stockPrice.closePrice() * stock.count();
+
+            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stockPrice.last(), stock.count(), stockInfo));
+            portfolioCost += stockPrice.last() * stock.count();
         }
 
         return new PortfolioDto(portfolioCost, stockDtos);

@@ -48,9 +48,9 @@ public class StockService {
         MoexSecuritiesRp symbolsByChars = moexApi.getSymbolsByChars(chars);
         List<SecurityInfo> securityInfos = symbolsByChars.securities().data().stream().map(SecurityInfo::fromList).toList();
         return securityInfos.stream().map(stock -> new StockSearchDto(
+                stock.secid(),
                 stock.shortname(),
-                stock.shortname(),
-                "/?symbol=" + stock.secid() + "&from=2026-01-01"
+                "/?symbol=" + stock.secid() + "&period=" + PeriodEnum.month
         )).collect(Collectors.toList());
     }
 

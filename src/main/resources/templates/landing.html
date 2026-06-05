@@ -68,15 +68,25 @@
     </nav>
     <div class="row">
         <div class="col-3 offset-md-1">
-            <div class="card mt-4" style="width: 30rem;">
+            <div class="card mt-4" style="width: 35rem;">
                 <div class="card-body">
-                    <span class="card-title fw-semibold fs-3" th:text=${landing.info.name}>IBM</span><br>
+                    <div class="d-flex align-items-center">
+                        <div class="col-1 me-2">
+                            <img class="rounded img-fluid"
+                                 th:src="'//invest-brands.cdn-tinkoff.ru/' + ${landing.info.isin} + 'x640.png'"
+                                 th:alt="${landing.info?.shortname}">
+                        </div>
+                        <div class="">
+                            <span class="card-title fw-semibold fs-3" th:text=${landing.info.name}>Аэрофлот-росс.авиалин(ПАО)ао</span>
+                        </div>
+                    </div>
+
                     <span class="card-subtitle"
                           th:text="${landing.info?.typename}">Акция обыкновенная</span><br>
                     <span class="card-subtitle text-body-secondary fw-light small"
                           th:text="'Цена в ' + ${landing.info?.faceUnit}">Цена в RUB</span><br>
                     <span class="card-subtitle mb-2 fs-4 fw-semibold"
-                          th:text="${landing.price?.last} + ' ' + ${landing.info?.faceUnit}">234.5213</span>
+                          th:text="${landing.price?.last} + ' ' + ${landing.info?.faceUnit}">234.52</span>
                     <span th:classappend="${landing.price?.lastChange >= 0} ? text-success : text-danger"
                           class="card-text fs-5 ms-2"
                           th:text="(${landing.price?.lastChange >= 0} ? '+' : '') + ${landing.price?.lastChange}">-4.5100</span>
