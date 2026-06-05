@@ -20,8 +20,9 @@ public class MoexApi {
     Gson gson;
     RestTemplate restTemplate;
 
-    public List<Candle> getPricesBySymbolAndPeriod(@NonNull String symbol, @NonNull LocalDate from) {
-        String url = "https://iss.moex.com/iss/engines/stock/markets/shares/securities/%s/candles.json?from=%s&till=2026-06-01&interval=24".formatted(symbol, from.toString());
+    public List<Candle> getPricesBySymbolAndPeriod(@NonNull String symbol, @NonNull String from, @NonNull Integer interval) {
+        String url = "https://iss.moex.com/iss/engines/stock/markets/shares/securities/%s/candles.json?from=%s&till=%s&interval=%s"
+                .formatted(symbol, from, LocalDate.now().toString(), interval);
         String json = restTemplate.getForObject(url, String.class);
         MoexCandlesRp moexCandlesRp = gson.fromJson(json, MoexCandlesRp.class);
         List<Candle> candles = moexCandlesRp.candles().data().stream().map(Candle::fromList).toList();

@@ -9,16 +9,24 @@ import java.util.List;
 public class TechIndicatorsResults {
 
     public static TechIndicatorsDto getIndicators(List<Candle> prices) {
+        if (!prices.isEmpty()){
+            List<Double> openPrices = prices.stream().map(Candle::open).toList();
+            List<Double> closePrices = prices.stream().map(Candle::close).toList();
+            List<Double> lowPrices = prices.stream().map(Candle::low).toList();
+            List<Double> highPrices = prices.stream().map(Candle::high).toList();
+            Double close = prices.getLast().close();
+            Double oldClose = prices.getFirst().close();
 
-        List<Double> openPrices = prices.stream().map(Candle::open).toList();
-        List<Double> lowPrices = prices.stream().map(Candle::low).toList();
-        List<Double> highPrices = prices.stream().map(Candle::high).toList();
-        Double close = prices.getLast().close();
-
-        return new TechIndicatorsDto(
-                rsi(openPrices),
-                stochastic(lowPrices, highPrices, close)
-        );
+            return new TechIndicatorsDto(
+                    stochastic(lowPrices, highPrices, close),
+                    rsi(openPrices),
+                    ema(closePrices),
+                    sma(closePrices),
+                    momentum(close, oldClose),
+                    new IndicatorValue(IndicatorPredict.NEUTRAL, 12.2)
+            );
+        }
+        return null;
     }
 
     public static IndicatorValue rsi(List<Double> prices) {
@@ -42,6 +50,54 @@ public class TechIndicatorsResults {
 
         if (resRaw < 0 || resRaw > 100) {
             throw new ArithmeticException("Invalid stochastic result");
+        }
+
+        if (resRaw >= 80) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        }
+        if (resRaw <= 20) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        }
+        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+    }
+
+    public static IndicatorValue momentum(double close, double oldClose) {//momentum
+        double resRaw = TechIndicatorsRaw.momentum(close, oldClose);
+
+        if (false) {
+            throw new ArithmeticException("Invalid momentum result");
+        }
+
+        if (resRaw >= 80) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        }
+        if (resRaw <= 20) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        }
+        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+    }
+
+    public static IndicatorValue sma(List<Double> closePrices) {//sma
+        double resRaw = TechIndicatorsRaw.sma(closePrices);
+
+        if (false) {
+            throw new ArithmeticException("Invalid sma result");
+        }
+
+        if (resRaw >= 80) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        }
+        if (resRaw <= 20) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        }
+        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+    }
+
+    public static IndicatorValue ema(List<Double> closePrices) {//ema
+        double resRaw = TechIndicatorsRaw.ema(closePrices);
+
+        if (false) {
+            throw new ArithmeticException("Invalid ema result");
         }
 
         if (resRaw >= 80) {

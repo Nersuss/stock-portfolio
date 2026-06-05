@@ -9,8 +9,9 @@ import ru.nersus.stock.dao.MoexApi;
 import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.TechIndicatorsDto;
 import ru.nersus.stock.dto.api.*;
+import ru.nersus.stock.enums.PeriodEnum;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,17 +22,26 @@ public class StockService {
 
     MoexApi moexApi;
 
-    public LandingDto getLanding(String symbol, LocalDate from) {
+    public LandingDto getLanding(String symbol, PeriodEnum period) {
         SecurityDescription stockInfo = getStockInfoBySymbol(symbol);
         StockPrice stockPrice = getStockPriceBySymbol(symbol);
-        List<Candle> stockPrices = getPricesBySymbolAndPeriod(symbol, from);
+        List<Candle> stockPrices = getPricesBySymbolAndPeriod(symbol, period);
         TechIndicatorsDto indicators = TechIndicatorsResults.getIndicators(stockPrices);
 
         return new LandingDto(stockInfo, stockPrice, stockPrices, indicators);
     }
 
-    public List<Candle> getPricesBySymbolAndPeriod(String symbol, LocalDate period) {
-        return moexApi.getPricesBySymbolAndPeriod(symbol, period);
+    String getLocalDateTimeFromPeriod(PeriodEnum period) {
+        return switch (period) {
+            case PeriodEnum.hour -> LocalDateTime.now().minusHours(1).toString();
+            case PeriodEnum.day -> LocalDateTime.now().minusDays(1).toString();
+            case PeriodEnum.week -> LocalDateTime.now().minusWeeks(1).toString();
+            case PeriodEnum.month -> LocalDateTime.now().minusMonths(1).toString();
+        };
+    }
+
+    public List<Candle> getPricesBySymbolAndPeriod(String symbol, PeriodEnum period) {
+        return moexApi.getPricesBySymbolAndPeriod(symbol, getLocalDateTimeFromPeriod(period), period.getValue());
     }
 
     public List<StockSearchDto> getSymbolsByChars(String chars) {

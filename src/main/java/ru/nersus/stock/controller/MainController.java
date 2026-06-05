@@ -15,11 +15,11 @@ import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.dto.AddStockDto;
 import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.PortfolioDto;
+import ru.nersus.stock.enums.PeriodEnum;
 import ru.nersus.stock.service.StockService;
 import ru.nersus.stock.service.UserService;
 
 import java.security.Principal;
-import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,13 +30,13 @@ public class MainController {
     UserService userService;
 
     @GetMapping("/")
-    String getLanding(@RequestParam(required = false) String symbol, @RequestParam(required = false) String from,
+    String getLanding(@RequestParam(required = false) String symbol, @RequestParam(required = false) PeriodEnum period,
                       Model model) {
-        if (StringUtils.isEmpty(symbol) || StringUtils.isEmpty(from)) {
-            return "redirect:/?symbol=AFLT&from=2026-01-01";
+        if (StringUtils.isEmpty(symbol) || period == null) {
+            return "redirect:/?symbol=AFLT&period=month";
         }
 
-        LandingDto landingDto = stockService.getLanding(symbol, LocalDate.parse(from));
+        LandingDto landingDto = stockService.getLanding(symbol,period);
         model.addAttribute("landing", landingDto);
         return "landing";
     }

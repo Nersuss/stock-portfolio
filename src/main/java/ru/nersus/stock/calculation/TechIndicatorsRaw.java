@@ -14,6 +14,15 @@ public class TechIndicatorsRaw {
         }
         return ema;
     }
+    public static double sma(List<Double> closePrices) {//Расчет простой скользящей средней (SMA)
+        int N = closePrices.size();
+
+        double sma = 0;
+        for (Double price : closePrices) {
+            sma += price;
+        }
+        return sma/N;
+    }
 
     public static double rsi(List<Double> prices) {
         int N = prices.size();
@@ -53,8 +62,8 @@ public class TechIndicatorsRaw {
         return ((close - lowest) / (highest - lowest)) * 100;
     }
 
-    public static double momentum(double old, double cur) {//Моментум
-        return cur - old;
+    public static double momentum(double close, double oldClose) {//Моментум
+        return (close - oldClose) * 100;
     }
 
 
