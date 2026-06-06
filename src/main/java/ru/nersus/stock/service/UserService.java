@@ -43,6 +43,7 @@ public class UserService {
         stockDao.addByUserId(
                 new Stock(null,
                         addStockDto.symbol(),
+                        addStockDto.shortname(),
                         addStockDto.count(),
                         myUserDetails.getId()
                 ));
@@ -58,7 +59,7 @@ public class UserService {
             SecurityDescription stockInfo = moexApi.getStockInfoBySymbol(stock.symbol());
             StockPrice stockPrice = moexApi.getStockPriceBySymbol(stock.symbol());
 
-            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stockPrice.last(), stock.count(), stockInfo));
+            stockDtos.add(new StockDto(stock.id(), stock.symbol(), stock.shortName(), stockPrice.last(), stock.count(), stockInfo.faceUnit(), stockInfo));
             portfolioCost += stockPrice.last() * stock.count();
         }
 

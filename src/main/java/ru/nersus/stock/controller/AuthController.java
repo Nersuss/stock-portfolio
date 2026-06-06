@@ -28,8 +28,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    void registration(@ModelAttribute("loginDto") LoginDto loginDto) {
+    String registration(@ModelAttribute("loginDto") LoginDto loginDto) {
         authService.registerUser(loginDto);
+        return "redirect:/login";
     }
 
 }

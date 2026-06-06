@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS public.stock (
 	id SERIAL PRIMARY KEY,
 	count INTEGER NOT NULL,
 	owner_id INTEGER NOT NULL,
-	symbol VARCHAR(255) NOT NULL,
+	symbol VARCHAR(15) NOT NULL,
+	shortname VARCHAR(63) NOT NULL,
 	FOREIGN KEY (owner_id) REFERENCES public.users (id)
 );
 

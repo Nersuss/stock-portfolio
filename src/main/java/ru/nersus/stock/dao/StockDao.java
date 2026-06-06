@@ -23,7 +23,7 @@ public class StockDao {
     public List<Stock> getStocksByEmail(String email) {
         @Language("SQL")
         String sql = """
-                SELECT s.id, symbol, count, owner_id FROM public.stock s 
+                SELECT s.id, symbol, shortname, count, owner_id FROM public.stock s 
                 JOIN public.users u ON u.id=s.owner_id WHERE u.email = :email;
                 """;
 
@@ -37,11 +37,12 @@ public class StockDao {
     public void addByUserId(Stock stock) {
         @Language("SQL")
         String sql = """
-                INSERT INTO public.stock (symbol, count, owner_id) VALUES (:symbol, :count, :owner_id);
+                INSERT INTO public.stock (symbol, shortname, count, owner_id) VALUES (:symbol, :shortname, :count, :owner_id);
                 """;
         jdbcTemplate.update(sql,
                 new MapSqlParameterSource()
                         .addValue("symbol", stock.symbol())
+                        .addValue("shortname", stock.shortName())
                         .addValue("count", stock.count())
                         .addValue("owner_id", stock.ownerId())
         );

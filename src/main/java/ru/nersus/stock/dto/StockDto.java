@@ -5,8 +5,10 @@ import ru.nersus.stock.dto.api.SecurityDescription;
 public record StockDto(
         int id,
         String symbol,
+        String shortname,
         double cost,
         Integer count,
+        String wallet,
         SecurityDescription info
 ) {
 }

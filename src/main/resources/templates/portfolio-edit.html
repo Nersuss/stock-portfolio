@@ -120,11 +120,13 @@
                                 // При выборе акции заполняем скрытые поля
                                 var selectedData = e.params.data;
                                 document.getElementById('stockSymbol').value = selectedData.id;    // symbol
+                                document.getElementById('stockShortname').value = selectedData.text;    // symbol
                             });
                         });
                     </script>
                 </div>
                 <input type="hidden" id="stockSymbol" name="symbol">
+                <input type="hidden" id="stockShortname" name="shortname">
                 <div class="div mb-3">
                     <input name="count" id="count" placeholder="Количество акций:">
                 </div>
