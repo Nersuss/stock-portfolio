@@ -1,5 +1,7 @@
 package ru.nersus.stock.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,12 +26,17 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Основной контроллер", description = "")
 public class MainController {
 
     StockService stockService;
     UserService userService;
 
     @GetMapping("/")
+    @Operation(
+            summary = "Получение страницы лендинга",
+            description = "Вывод основной информации об акции и результатов технического анализа"
+    )
     String getLanding(@RequestParam(required = false) String symbol, @RequestParam(required = false) PeriodEnum period,
                       Model model) {
         if (StringUtils.isEmpty(symbol) || period == null) {
@@ -42,6 +49,10 @@ public class MainController {
     }
 
     @GetMapping("/portfolio")
+    @Operation(
+            summary = "Получение страницы портфеля акций пользователя",
+            description = "Вывод содержимого портфеля акций и результатов технического анализа"
+    )
     String getPortfolio(Principal principal, Model model) {
         PortfolioDto portfolio = userService.getPortfolio(principal.getName());
         model.addAttribute("portfolio", portfolio);
@@ -49,6 +60,10 @@ public class MainController {
     }
 
     @GetMapping("/portfolio/edit")
+    @Operation(
+            summary = "Получение страницы редактирования портфеля акций",
+            description = "Вывод содержимого портфеля акций и предоставление возможности для добавления и удаления акций"
+    )
     String getPortfolioEdit(Principal principal, Model model) {
         PortfolioDto portfolio = userService.getPortfolio(principal.getName());
         model.addAttribute("portfolio", portfolio);
@@ -56,12 +71,20 @@ public class MainController {
     }
 
     @PostMapping("/portfolio/stock/add")
+    @Operation(
+            summary = "Добавление акции в портфель",
+            description = "Метод позволяет добавить выбранную акцию в портфель пользователя"
+    )
     String addStock(@ModelAttribute("addStockDto") AddStockDto addStockDto, @AuthenticationPrincipal MyUserDetails myUserDetails) {
         userService.addStockByEmail(addStockDto, myUserDetails);
         return "redirect:/portfolio";
     }
 
     @PostMapping("/portfolio/stock/delete")
+    @Operation(
+            summary = "Удаление акции из портфеля",
+            description = "Метод удаляет выбранную акцию из портфеля"
+    )
     String deleteStock(@RequestParam int id, @AuthenticationPrincipal MyUserDetails myUserDetails) {
         userService.deleteStockById(id, myUserDetails);
         return "redirect:/portfolio/edit";

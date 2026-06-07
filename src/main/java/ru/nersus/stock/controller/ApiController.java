@@ -1,5 +1,7 @@
 package ru.nersus.stock.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,10 +16,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Rest-контроллер для отправки запросов к внешнему API", description = "")
 public class ApiController {
     StockService stockService;
 
     @GetMapping("/api/stocks")
+    @Operation(
+            summary = "Поиск акций по названию компаний и тикеру",
+            description = "Возвращает список акций соответствующих запросу"
+    )
     List<StockSearchDto> getSymbolsByChars(@RequestParam String query) {
         List<StockSearchDto> symbols = stockService.getSymbolsByChars(query);
 

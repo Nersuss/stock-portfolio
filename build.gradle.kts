@@ -25,7 +25,6 @@ repositories {
 }
 
 dependencies {
-	//implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -42,6 +41,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("com.google.code.gson:gson:2.13.2")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
 }
 
 tasks.withType<Test> {

@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/", "/login", "/register", "/favicon.ico", "/api/stocks").permitAll();
+                    auth.requestMatchers("/", "/login", "/register", "/favicon.ico", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui", "/api/stocks").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(form -> form

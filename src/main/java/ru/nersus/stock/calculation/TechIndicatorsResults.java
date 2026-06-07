@@ -32,10 +32,6 @@ public class TechIndicatorsResults {
     public static IndicatorValue rsi(List<Double> prices) {
         double resRaw = TechIndicatorsRaw.rsi(prices);
 
-        if (resRaw < 0 || resRaw > 100) {
-            throw new ArithmeticException("Invalid RSI result");
-        }
-
         if (resRaw >= 70) {
             return new IndicatorValue(IndicatorPredict.SELL, resRaw);
         }
@@ -47,10 +43,6 @@ public class TechIndicatorsResults {
 
     public static IndicatorValue stochastic(List<Double> low, List<Double> high, double close) {//Стохастический осциллятор
         double resRaw = TechIndicatorsRaw.stochastic(low, high, close);
-
-        if (resRaw < 0 || resRaw > 100) {
-            throw new ArithmeticException("Invalid stochastic result");
-        }
 
         if (resRaw >= 80) {
             return new IndicatorValue(IndicatorPredict.SELL, resRaw);
@@ -64,10 +56,6 @@ public class TechIndicatorsResults {
     public static IndicatorValue momentum(double close, double oldClose) {//momentum
         double resRaw = TechIndicatorsRaw.momentum(close, oldClose);
 
-        if (false) {
-            throw new ArithmeticException("Invalid momentum result");
-        }
-
         if (resRaw >= 80) {
             return new IndicatorValue(IndicatorPredict.SELL, resRaw);
         }
@@ -80,10 +68,6 @@ public class TechIndicatorsResults {
     public static IndicatorValue sma(List<Double> closePrices) {//sma
         double resRaw = TechIndicatorsRaw.sma(closePrices);
 
-        if (false) {
-            throw new ArithmeticException("Invalid sma result");
-        }
-
         if (resRaw >= 80) {
             return new IndicatorValue(IndicatorPredict.SELL, resRaw);
         }
@@ -95,10 +79,6 @@ public class TechIndicatorsResults {
 
     public static IndicatorValue ema(List<Double> closePrices) {//ema
         double resRaw = TechIndicatorsRaw.ema(closePrices);
-
-        if (false) {
-            throw new ArithmeticException("Invalid ema result");
-        }
 
         if (resRaw >= 80) {
             return new IndicatorValue(IndicatorPredict.SELL, resRaw);

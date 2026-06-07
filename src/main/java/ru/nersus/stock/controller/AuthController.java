@@ -1,5 +1,7 @@
 package ru.nersus.stock.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,21 +15,34 @@ import ru.nersus.stock.service.AuthService;
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Контроллер с методами авторизации", description = "")
 public class AuthController {
 
     AuthService authService;
 
     @GetMapping("/login")
+    @Operation(
+            summary = "Получение страницы входа в аккаунт",
+            description = "Вывод формы для входа в аккаунт"
+    )
     String getLogin() {
         return "login";
     }
 
     @GetMapping("/register")
+    @Operation(
+            summary = "Получение страницы регистрации нового аккаунта",
+            description = "Вывод формы для регистрации"
+    )
     String getRegister() {
         return "register";
     }
 
     @PostMapping("/register")
+    @Operation(
+            summary = "Регистрация пользователя на основе введенных данных",
+            description = "Метод осуществляет регистрацию пользователя в системе"
+    )
     String registration(@ModelAttribute("loginDto") LoginDto loginDto) {
         authService.registerUser(loginDto);
         return "redirect:/login";

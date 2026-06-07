@@ -223,11 +223,14 @@
     <div class="row justify-content-md-center mt-5">
         <div class="col-3 text-center ">
             <div class="">
-                <span class="fs-4 fw-bold">Аналитика</span>
+                <span class="fs-4 fw-bold">Анализ</span>
                 <br>
                 <span class="fs-5">Общий прогноз:</span>
-                <span class="fw-bold fs-5" th:text="${landing.indicators.generalPredict.predict.getValue()}"
+                <span th:if="${landing.indicators?.rsi != null}" class="fw-bold fs-5" th:text="${landing.indicators.generalPredict.predict.getValue()}"
                       th:classappend="${landing.indicators.generalPredict.predict.getValue() == 'Покупать'} ? text-success : text-danger">Продавать</span>
+                <div th:unless="${landing?.indicators != null}" class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> Нет данных технического анализа
+                </div>
             </div>
         </div>
         <div class="row justify-content-md-center mt-4">
@@ -242,17 +245,17 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
                         <td scope="row">Индекс относительной силы (RSI)</td>
-                        <td th:text="${landing.indicators.rsi.predict.getValue()}"></td>
+                        <td th:if="${landing.indicators?.rsi != null}" th:text="${landing.indicators.rsi.predict.getValue()}">-</td>
                         <td th:text="${landing.indicators.rsi.rawValue}"></td>
                     </tr>
-                    <tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
                         <td scope="row">Стохастик</td>
                         <td th:text="${landing.indicators.stochastic.predict.getValue()}"></td>
                         <td th:text="${landing.indicators.stochastic.rawValue}"></td>
                     </tr>
-                    <tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
                         <td scope="row">Моментум</td>
                         <td th:text="${landing.indicators.momentum.predict.getValue()}"></td>
                         <td th:text="${landing.indicators.momentum.rawValue}"></td>
