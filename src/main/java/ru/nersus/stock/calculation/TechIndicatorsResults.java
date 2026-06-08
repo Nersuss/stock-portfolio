@@ -22,8 +22,7 @@ public class TechIndicatorsResults {
                     rsi(openPrices),
                     ema(closePrices),
                     sma(closePrices),
-                    momentum(close, oldClose),
-                    new IndicatorValue(IndicatorPredict.NEUTRAL, 12.2)
+                    momentum(close, oldClose)
             );
         }
         return null;

@@ -74,7 +74,7 @@
         <div class="col-sm-2 card">
             <div class="card-body">
                 <p class="card-text">Стоимость портфеля</p>
-                <h5 class="card-title" th:text="${portfolio.cost} + ''"></h5>
+                <h5 class="card-title" th:text="${#numbers.formatDecimal(portfolio.cost, 0, 'COMMA', 2, 'POINT')} + ' RUB'"></h5>
             </div>
         </div>
         <div class="col-sm-2 card">
@@ -133,6 +133,7 @@
                     <td scope="col">Тикер</td>
                     <td scope="col">Кол&#8209;во</td>
                     <td scope="col">Общая стоимость</td>
+                    <td scope="col">Прогноз</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -144,6 +145,7 @@
                     <td><span th:text="${stock.symbol}"></span></td>
                     <td><span th:text="${stock.count}"></span></td>
                     <td><span th:text="${#numbers.formatDecimal((stock.cost * stock.count), 0, 'COMMA', 2, 'POINT')} + ' ' + ${stock.wallet}"></span></td>
+                    <td><span></span></td>
                 </tr>
                 </tbody>
             </table>
