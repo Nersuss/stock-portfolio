@@ -37,12 +37,12 @@
                     </li>
                     <div sec:authorize="!isAuthenticated()">
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true" href="/portfolio">Портфель</a>
+                            <a class="nav-link disabled" aria-disabled="true" href="/portfolio?period=month">Портфель</a>
                         </li>
                     </div>
                     <div sec:authorize="isAuthenticated()">
                         <li class="nav-item">
-                            <a class="nav-link" href="/portfolio">Портфель</a>
+                            <a class="nav-link" href="/portfolio?period=month">Портфель</a>
                         </li>
                     </div>
                 </ul>

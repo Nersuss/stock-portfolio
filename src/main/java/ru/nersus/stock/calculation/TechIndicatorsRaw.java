@@ -8,7 +8,7 @@ public class TechIndicatorsRaw {
 
     public static double ema(List<Double> prices) {//Расчет экспоненциальной скользящей средней (EMA)
         List<Double> emaValues = new ArrayList<>();
-        int period = 10;
+        int period = 6;
 
         // 1. Рассчитываем множитель (multiplier)
         double k = 2.0 / (period + 1);

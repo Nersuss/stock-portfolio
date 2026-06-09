@@ -142,20 +142,22 @@
             <table class="table">
                 <thead class="table-light">
                 <tr>
-                    <td scope="col">Акция</td>
+                    <td scope="col">Компания</td>
+                    <td scope="col">Тикер</td>
                     <td scope="col">Кол&#8209;во</td>
-                    <td scope="col">Цена</td>
+                    <td scope="col">Общая стоимость</td>
                     <td scope="col">Удалить</td>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${portfolio.stocks.empty}">
-                    <td colspan="2">В вашем портфеле пока нет акций.</td>
+                    <td colspan="2">Добавьте какую-нибудь акцию!</td>
                 </tr>
                 <tr th:unless="${portfolio.stocks.empty}" th:each="stock : ${portfolio.stocks}">
+                    <td><span th:text="${stock.shortname}"></span></td>
                     <td><span th:text="${stock.symbol}"></span></td>
                     <td><span th:text="${stock.count}"></span></td>
-                    <td><span th:text="${stock.cost}"></span></td>
+                    <td><span th:text="${#numbers.formatDecimal((stock.cost * stock.count), 0, 'COMMA', 2, 'POINT')} + ' ' + ${stock.wallet}"></span></td>
                     <td>
                         <form th:action="'/portfolio/stock/delete?id=' + ${stock.id}"
                               method="POST">

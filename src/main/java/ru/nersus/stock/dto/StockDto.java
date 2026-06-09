@@ -1,5 +1,6 @@
 package ru.nersus.stock.dto;
 
+import ru.nersus.stock.calculation.IndicatorPredict;
 import ru.nersus.stock.dto.api.SecurityDescription;
 
 public record StockDto(
@@ -9,6 +10,7 @@ public record StockDto(
         double cost,
         Integer count,
         String wallet,
+        IndicatorPredict predict,
         SecurityDescription info
 ) {
 }

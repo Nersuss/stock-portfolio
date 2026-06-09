@@ -53,8 +53,11 @@ public class MainController {
             summary = "Получение страницы портфеля акций пользователя",
             description = "Вывод содержимого портфеля акций и результатов технического анализа"
     )
-    String getPortfolio(Principal principal, Model model) {
-        PortfolioDto portfolio = userService.getPortfolio(principal.getName());
+    String getPortfolio(Principal principal, Model model, PeriodEnum period) {
+        if (period == null) {
+            return "redirect:/portfolio?period=month";
+        }
+        PortfolioDto portfolio = userService.getPortfolio(principal.getName(), period);
         model.addAttribute("portfolio", portfolio);
         return "portfolio";
     }
@@ -65,7 +68,7 @@ public class MainController {
             description = "Вывод содержимого портфеля акций и предоставление возможности для добавления и удаления акций"
     )
     String getPortfolioEdit(Principal principal, Model model) {
-        PortfolioDto portfolio = userService.getPortfolio(principal.getName());
+        PortfolioDto portfolio = userService.getPortfolio(principal.getName(), null);
         model.addAttribute("portfolio", portfolio);
         return "portfolio-edit";
     }
