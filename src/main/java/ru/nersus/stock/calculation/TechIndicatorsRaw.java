@@ -1,19 +1,37 @@
 package ru.nersus.stock.calculation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class TechIndicatorsRaw {
 
     public static double ema(List<Double> prices) {//Расчет экспоненциальной скользящей средней (EMA)
-        int N = prices.size();
+        List<Double> emaValues = new ArrayList<>();
+        int period = 10;
 
-        double weight = (double) 2 / (N + 1);
-        double ema = prices.getFirst();
-        for (Double price : prices) {
-            ema = (price * weight) + (ema * (1 - weight));
+        // 1. Рассчитываем множитель (multiplier)
+        double k = 2.0 / (period + 1);
+
+        // 2. Первое значение EMA — это простая скользящая средняя (SMA) за первые N дней
+        double sum = 0.0;
+        for (int i = 0; i < period; i++) {
+            sum += prices.get(i);
         }
-        return ema;
+        double previousEma = sum / period;
+        emaValues.add(previousEma);
+
+        // 3. Расчет для всех остальных дней
+        for (int i = period; i < prices.size(); i++) {
+            double closePrice = prices.get(i);
+            double currentEma = (closePrice - previousEma) * k + previousEma;
+            emaValues.add(currentEma);
+            previousEma = currentEma; // Обновляем предыдущее значение для следующего шага
+        }
+
+        return emaValues.getLast();
     }
+
     public static double sma(List<Double> closePrices) {//Расчет простой скользящей средней (SMA)
         int N = closePrices.size();
 
@@ -21,7 +39,7 @@ public class TechIndicatorsRaw {
         for (Double price : closePrices) {
             sma += price;
         }
-        return sma/N;
+        return sma / N;
     }
 
     public static double rsi(List<Double> prices) {
