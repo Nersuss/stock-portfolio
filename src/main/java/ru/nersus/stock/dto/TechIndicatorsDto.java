@@ -2,11 +2,13 @@ package ru.nersus.stock.dto;
 
 import ru.nersus.stock.calculation.IndicatorPredict;
 
+import java.util.List;
+
 public record TechIndicatorsDto(
+        List<IndicatorValue> emas,
+        List<IndicatorValue> smas,
         IndicatorValue stochastic,
         IndicatorValue rsi,
-        IndicatorValue ema,
-        IndicatorValue sma,
         IndicatorValue momentum,
         IndicatorValue williams,
         IndicatorValue vhf,
@@ -16,16 +18,16 @@ public record TechIndicatorsDto(
         IndicatorValue generalPredict
 ) {
 
-    public TechIndicatorsDto(IndicatorValue stochastic,
+    public TechIndicatorsDto(List<IndicatorValue> emas,
+                             List<IndicatorValue> smas,
+                             IndicatorValue stochastic,
                              IndicatorValue rsi,
-                             IndicatorValue ema,
-                             IndicatorValue sma,
                              IndicatorValue momentum,
                              IndicatorValue williams,
                              IndicatorValue vhf,
                              IndicatorValue mfi) {
-        this(stochastic, rsi, ema, sma, momentum, williams, vhf, mfi,
-                calculateGeneralPredict(stochastic, rsi, ema, sma, momentum, williams, vhf, mfi));
+        this(emas, smas, stochastic, rsi, momentum, williams, vhf, mfi,
+                calculateGeneralPredict(stochastic, rsi, momentum, williams, vhf, mfi));
     }
 
     private static IndicatorValue calculateGeneralPredict(IndicatorValue... indicators) {

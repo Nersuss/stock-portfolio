@@ -1,46 +1,80 @@
 package ru.nersus.stock.calculation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class TechIndicatorsRaw {
 
-    public static double ema(List<Double> prices) {//Расчет экспоненциальной скользящей средней (EMA)
-        List<Double> emaValues = new ArrayList<>();
-        int period = 6;
+    public static Map<Integer, Double> calculateSMA(List<Double> closePrices, int... periods) {
+        Map<Integer, Double> results = new HashMap<>();
+        for (int period : periods) {
+            if (closePrices.size() >= period) {
+                // Берем последние N значений
+                List<Double> lastNPrices = closePrices.subList(
+                        closePrices.size() - period,
+                        closePrices.size()
+                );
+                double sma = sma(lastNPrices);
+                results.put(period, sma);
+            }
+        }
+        return results;
+    }
 
-        // 1. Рассчитываем множитель (multiplier)
-        double k = 2.0 / (period + 1);
+    public static double sma(List<Double> prices) {
+        return prices.stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
+    }
 
-        // 2. Первое значение EMA — это простая скользящая средняя (SMA) за первые N дней
+    public static Map<Integer, Double> calculateEMA(List<Double> closePrices, int... periods) {
+        Map<Integer, Double> results = new HashMap<>();
+        for (int period : periods) {
+            if (closePrices.size() >= period) {
+                // Береем последние N + period значений для расчета EMA
+                // Нужно period значений для инициализации + еще немного для расчета
+                int neededSize = period * 2; // минимум period для SMA + period для EMA
+                List<Double> recentPrices;
+
+                if (closePrices.size() >= neededSize) {
+                    recentPrices = closePrices.subList(
+                            closePrices.size() - neededSize,
+                            closePrices.size()
+                    );
+                } else {
+                    recentPrices = closePrices.subList(
+                            closePrices.size() - period,
+                            closePrices.size()
+                    );
+                }
+
+                double ema = ema(recentPrices, period);
+                results.put(period, ema);
+            }
+        }
+        return results;
+    }
+
+    public static double ema(List<Double> prices, int period) {
+        if (prices.size() < period) {
+            throw new IllegalArgumentException("Недостаточно данных для периода " + period);
+        }
+
+        double multiplier = 2.0 / (period + 1);
+
+        // Первое значение EMA = SMA за первые period значений из переданного списка
         double sum = 0.0;
         for (int i = 0; i < period; i++) {
             sum += prices.get(i);
         }
-        double previousEma = sum / period;
-        emaValues.add(previousEma);
+        double ema = sum / period;
 
-        // 3. Расчет для всех остальных дней
+        // Расчет EMA для остальных значений
         for (int i = period; i < prices.size(); i++) {
-            double closePrice = prices.get(i);
-            double currentEma = (closePrice - previousEma) * k + previousEma;
-            emaValues.add(currentEma);
-            previousEma = currentEma; // Обновляем предыдущее значение для следующего шага
+            ema = (prices.get(i) - ema) * multiplier + ema;
         }
 
-        return emaValues.getLast();
-    }
-
-    public static double sma(List<Double> closePrices) {//Расчет простой скользящей средней (SMA)
-        int N = closePrices.size();
-
-        double sma = 0;
-        for (Double price : closePrices) {
-            sma += price;
-        }
-        return sma / N;
+        return ema;
     }
 
     public static double rsi(List<Double> prices) {
@@ -63,8 +97,8 @@ public class TechIndicatorsRaw {
             }
         }
 
-        double emaGrow = ema(grows);
-        double emaFall = ema(falls);
+        double emaGrow = ema(grows, N);
+        double emaFall = ema(falls, N);
 
         if (emaFall == 0) {
             return 100.0;

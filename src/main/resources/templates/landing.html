@@ -37,7 +37,8 @@
                     </li>
                     <div sec:authorize="!isAuthenticated()">
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true" href="/portfolio?period=month">Портфель</a>
+                            <a class="nav-link disabled" aria-disabled="true"
+                               href="/portfolio?period=month">Портфель</a>
                         </li>
                     </div>
                     <div sec:authorize="isAuthenticated()">
@@ -227,7 +228,8 @@
                 <br>
                 <div class="mt-3">
                     <span class="fs-5">Общий прогноз:</span>
-                    <span th:if="${landing.indicators?.rsi != null}" class="fw-bold fs-5 text-decoration-underline" th:text="${landing.indicators.generalPredict.predict.getValue()}"
+                    <span th:if="${landing.indicators?.rsi != null}" class="fw-bold fs-5 text-decoration-underline"
+                          th:text="${landing.indicators.generalPredict.predict.getValue()}"
                           th:classappend="${landing.indicators.generalPredict.predict.getValue() == 'Покупать' ? 'text-success' :
                                         (landing.indicators.generalPredict.predict.getValue() == 'Продавать' ? 'text-danger' : 'text-gray')}">-</span>
                     <div th:unless="${landing?.indicators != null}" class="alert alert-success text-center">
@@ -250,7 +252,9 @@
                     <tbody>
                     <tr th:if="${landing.indicators?.rsi != null}">
                         <td scope="row">Индекс относительной силы (RSI)</td>
-                        <td th:if="${landing.indicators?.rsi != null}" th:text="${landing.indicators.rsi.predict.getValue()}">-</td>
+                        <td th:if="${landing.indicators?.rsi != null}"
+                            th:text="${landing.indicators.rsi.predict.getValue()}">-
+                        </td>
                         <td th:text="${landing.indicators.rsi.rawValue}">-</td>
                     </tr>
                     <tr th:if="${landing.indicators?.rsi != null}">
@@ -279,23 +283,63 @@
                     <tbody>
                     <tr>
                         <td scope="row">Экспоненциальное скользящее среднее (10)</td>
-                        <td th:text="${landing.indicators.ema.predict.getValue()}"></td>
-                        <td th:text="${landing.indicators.ema.rawValue}"></td>
+                        <td th:text="${landing.indicators.emas.get(0).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.emas.get(0).rawValue}"></td>
                     </tr>
                     <tr>
                         <td scope="row">Простое скользящее среднее (10)</td>
-                        <td th:text="${landing.indicators.sma.predict.getValue()}"></td>
-                        <td th:text="${landing.indicators.sma.rawValue}"></td>
+                        <td th:text="${landing.indicators.smas.get(0).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.smas.get(0).rawValue}"></td>
                     </tr>
                     <tr>
                         <td scope="row">Экспоненциальное скользящее среднее (20)</td>
-                        <td th:text="${landing.indicators.ema.predict.getValue()}"></td>
-                        <td th:text="${landing.indicators.ema.rawValue}"></td>
+                        <td th:text="${landing.indicators.emas.get(1).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.emas.get(1).rawValue}"></td>
                     </tr>
                     <tr>
                         <td scope="row">Простое скользящее среднее (20)</td>
-                        <td th:text="${landing.indicators.sma.predict.getValue()}"></td>
-                        <td th:text="${landing.indicators.sma.rawValue}"></td>
+                        <td th:text="${landing.indicators.smas.get(1).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.smas.get(1).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Экспоненциальное скользящее среднее (30)</td>
+                        <td th:text="${landing.indicators.emas.get(2).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.emas.get(2).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Простое скользящее среднее (30)</td>
+                        <td th:text="${landing.indicators.smas.get(2).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.smas.get(2).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Экспоненциальное скользящее среднее (50)</td>
+                        <td th:text="${landing.indicators.emas.get(3).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.emas.get(3).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Простое скользящее среднее (50)</td>
+                        <td th:text="${landing.indicators.smas.get(3).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.smas.get(3).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Экспоненциальное скользящее среднее (100)</td>
+                        <td th:text="${landing.indicators.emas.get(4).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.emas.get(4).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Простое скользящее среднее (100)</td>
+                        <td th:text="${landing.indicators.smas.get(4).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.smas.get(4).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Экспоненциальное скользящее среднее (200)</td>
+                        <td th:text="${landing.indicators.emas.get(5).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.emas.get(5).rawValue}"></td>
+                    </tr>
+                    <tr>
+                        <td scope="row">Простое скользящее среднее (200)</td>
+                        <td th:text="${landing.indicators.smas.get(5).predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.smas.get(5).rawValue}"></td>
                     </tr>
                     </tbody>
                 </table>

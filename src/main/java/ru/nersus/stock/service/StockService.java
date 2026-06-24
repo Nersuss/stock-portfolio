@@ -33,10 +33,10 @@ public class StockService {
 
     String getLocalDateTimeFromPeriod(PeriodEnum period) {
         return switch (period) {
-            case PeriodEnum.hour -> LocalDateTime.now().minusHours(1).toString();
-            case PeriodEnum.day -> LocalDateTime.now().minusDays(1).toString();
-            case PeriodEnum.week -> LocalDateTime.now().minusWeeks(1).toString();
-            case PeriodEnum.month -> LocalDateTime.now().minusMonths(1).toString();
+            case PeriodEnum.hour -> LocalDateTime.now().minusHours(5).toString();
+            case PeriodEnum.day -> LocalDateTime.now().minusDays(10).toString();
+            case PeriodEnum.week -> LocalDateTime.now().minusWeeks(40).toString();
+            case PeriodEnum.month -> LocalDateTime.now().minusMonths(12).toString();
         };
     }
 

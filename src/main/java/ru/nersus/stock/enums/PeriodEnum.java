@@ -3,9 +3,9 @@ package ru.nersus.stock.enums;
 import lombok.Getter;
 
 public enum PeriodEnum {
-    hour(10),
-    day(60),
-    week(24),
+    hour(1),
+    day(10),
+    week(60),
     month(24);
 
     PeriodEnum(int value) {
