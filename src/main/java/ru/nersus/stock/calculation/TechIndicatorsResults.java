@@ -22,7 +22,10 @@ public class TechIndicatorsResults {
                     rsi(openPrices),
                     ema(closePrices),
                     sma(closePrices),
-                    momentum(close, oldClose)
+                    momentum(close, oldClose),
+                    williams(lowPrices, highPrices, close),
+                    vhf(closePrices),
+                    mfi(closePrices)
             );
         }
         return null;
@@ -88,4 +91,39 @@ public class TechIndicatorsResults {
         return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
     }
 
+    public static IndicatorValue williams(List<Double> low, List<Double> high, double close) {//Уильямса процентный диапазон
+        double resRaw = TechIndicatorsRaw.williams(low, high, close);
+
+        if (resRaw >= 80) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        }
+        if (resRaw <= 20) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        }
+        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+    }
+
+    public static IndicatorValue vhf(List<Double> closes) {//Вертикальный горизонтальный фильтр
+        double resRaw = TechIndicatorsRaw.vhf(closes);
+
+        if (resRaw >= 80) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        }
+        if (resRaw <= 20) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        }
+        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+    }
+
+    public static IndicatorValue mfi(List<Double> closes) {//Вертикальный горизонтальный фильтр
+        double resRaw = TechIndicatorsRaw.mfi(closes);
+
+        if (resRaw >= 80) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        }
+        if (resRaw <= 20) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        }
+        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+    }
 }

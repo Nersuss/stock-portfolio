@@ -3,46 +3,32 @@ package ru.nersus.stock.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.calculation.IndicatorPredict;
 import ru.nersus.stock.calculation.TechIndicatorsResults;
 import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.dao.MoexApi;
 import ru.nersus.stock.dao.StockDao;
-import ru.nersus.stock.dao.UserDao;
 import ru.nersus.stock.dto.AddStockDto;
-import ru.nersus.stock.dto.LoginDto;
 import ru.nersus.stock.dto.PortfolioDto;
 import ru.nersus.stock.dto.StockDto;
 import ru.nersus.stock.dto.api.Candle;
 import ru.nersus.stock.dto.api.SecurityDescription;
 import ru.nersus.stock.dto.api.StockPrice;
 import ru.nersus.stock.entity.Stock;
-import ru.nersus.stock.entity.User;
 import ru.nersus.stock.enums.PeriodEnum;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
 
-    UserDao userDao;
     StockDao stockDao;
     MoexApi moexApi;
     StockService stockService;
-
-    public User findUserByEmailAndPassword(LoginDto loginDto) {
-        Optional<User> user = userDao.findByEmail(loginDto.getEmail());
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user.get();
-    }
 
     public void addStockByEmail(AddStockDto addStockDto, MyUserDetails myUserDetails) {
         stockDao.addByUserId(

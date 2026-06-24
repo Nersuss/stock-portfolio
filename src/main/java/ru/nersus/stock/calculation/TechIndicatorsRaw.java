@@ -1,6 +1,7 @@
 package ru.nersus.stock.calculation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -82,6 +83,27 @@ public class TechIndicatorsRaw {
 
     public static double momentum(double close, double oldClose) {//Моментум
         return (close - oldClose) * 100;
+    }
+
+    public static double williams(List<Double> low, List<Double> high, double close) {//Процентный диапазон Уильямса (%R)
+        double lowest = low.stream().min(Comparator.naturalOrder()).orElseThrow();
+        double highest = high.stream().max(Comparator.naturalOrder()).orElseThrow();
+
+        return ((highest - close) / (highest - lowest)) * -100;
+    }
+
+    public static double vhf(List<Double> closes) {//Вертикальный горизонтальный фильтр
+        double highClose = Collections.max(closes);
+        double lowClose = Collections.min(closes);
+
+        return 0;
+    }
+
+    public static double mfi(List<Double> closes) {//Денежных потоков индекс
+        double highClose = Collections.max(closes);
+        double lowClose = Collections.min(closes);
+
+        return 0;
     }
 
 

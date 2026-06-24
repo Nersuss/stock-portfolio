@@ -8,6 +8,11 @@ public record TechIndicatorsDto(
         IndicatorValue ema,
         IndicatorValue sma,
         IndicatorValue momentum,
+        IndicatorValue williams,
+        IndicatorValue vhf,
+        IndicatorValue mfi,
+//        IndicatorValue massIndex,
+
         IndicatorValue generalPredict
 ) {
 
@@ -15,9 +20,12 @@ public record TechIndicatorsDto(
                              IndicatorValue rsi,
                              IndicatorValue ema,
                              IndicatorValue sma,
-                             IndicatorValue momentum) {
-        this(stochastic, rsi, ema, sma, momentum,
-                calculateGeneralPredict(stochastic, rsi, ema, sma, momentum));
+                             IndicatorValue momentum,
+                             IndicatorValue williams,
+                             IndicatorValue vhf,
+                             IndicatorValue mfi) {
+        this(stochastic, rsi, ema, sma, momentum, williams, vhf, mfi,
+                calculateGeneralPredict(stochastic, rsi, ema, sma, momentum, williams, vhf, mfi));
     }
 
     private static IndicatorValue calculateGeneralPredict(IndicatorValue... indicators) {
