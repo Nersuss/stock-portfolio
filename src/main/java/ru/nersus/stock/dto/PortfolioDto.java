@@ -4,7 +4,9 @@ import java.util.List;
 
 public record PortfolioDto(
         Double cost,
-        List<StockDto> stocks
+        List<StockDto> stocks,
+        Double portfolioChange,
+        Double portfolioChangePercent
 
 ) {
 }

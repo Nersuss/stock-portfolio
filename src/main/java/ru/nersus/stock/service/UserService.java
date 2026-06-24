@@ -45,25 +45,41 @@ public class UserService {
 
         List<StockDto> stockDtos = new ArrayList<>();
 
-        double portfolioCost = 0;
+        double currentPortfolioCost = 0;
+        double previousPortfolioCost = 0;
+
         for (Stock stock : userStocks) {
             SecurityDescription stockInfo = moexApi.getStockInfoBySymbol(stock.symbol());
             StockPrice stockPrice = moexApi.getStockPriceBySymbol(stock.symbol());
 
-            IndicatorPredict predict;
+            IndicatorPredict predict = null;
+            Double oldPrice;
+
             if (period != null) {
                 List<Candle> stockPrices = stockService.getPricesBySymbolAndPeriod(stock.symbol(), period);
                 predict = TechIndicatorsResults.getIndicators(stockPrices).generalPredict().predict();
-            } else {
-                predict = null;
+
+                // Берем цену открытия первой свечи как старую цену
+                if (!stockPrices.isEmpty()) {
+                    oldPrice = stockPrices.get(0).open();
+                    previousPortfolioCost += oldPrice * stock.count();
+                }
             }
 
+            double currentStockCost = stockPrice.last() * stock.count();
+            currentPortfolioCost += currentStockCost;
 
             stockDtos.add(new StockDto(stock.id(), stock.symbol(), stock.shortName(), stockPrice.last(), stock.count(), stockInfo.faceUnit(), predict, stockInfo));
-            portfolioCost += stockPrice.last() * stock.count();
+
         }
 
-        return new PortfolioDto(portfolioCost, stockDtos);
+        // Расчет изменения портфеля
+        double portfolioChange = currentPortfolioCost - previousPortfolioCost;
+        double portfolioChangePercent = previousPortfolioCost > 0
+                ? (portfolioChange / previousPortfolioCost) * 100
+                : 0;
+
+        return new PortfolioDto(currentPortfolioCost, stockDtos, portfolioChange, portfolioChangePercent);
     }
 
     public void deleteStockById(int id, MyUserDetails myUserDetails) {

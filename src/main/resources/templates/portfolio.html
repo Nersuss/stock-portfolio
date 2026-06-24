@@ -74,13 +74,28 @@
         <div class="col-sm-2 card">
             <div class="card-body">
                 <p class="card-text">Стоимость портфеля</p>
-                <h5 class="card-title" th:text="${#numbers.formatDecimal(portfolio.cost, 0, 'COMMA', 2, 'POINT')} + ' RUB'"></h5>
+                <h5 class="card-title"
+                    th:text="${#numbers.formatDecimal(portfolio.cost, 0, 'COMMA', 2, 'POINT')} + ' RUB'"></h5>
             </div>
         </div>
         <div class="col-sm-2 card">
             <div class="card-body">
-                <p class="card-text">Рост</p>
-                <h5 class="card-title">?</h5>
+                <p class="card-text">Тенденция</p>
+                <div th:if="${portfolio.portfolioChangePercent != 0}">
+                    <span th:classappend="${portfolio.portfolioChange >= 0} ? 'text-success' : 'text-danger'"
+                          class="fs-5">
+                        <span th:text="${portfolio.portfolioChange >= 0} ? '▲' : '▼'"></span>
+                        <span th:text="${#numbers.formatDecimal(portfolio.portfolioChange, 0, 'COMMA', 2, 'POINT')} + ' ₽'">
+                            +15,234.56 ₽
+                        </span>
+                    </span>
+                    <span th:classappend="${portfolio.portfolioChange >= 0} ? 'text-success' : 'text-danger'"
+                          class="fs-5 ms-2">
+                        <span th:text="(${portfolio.portfolioChange >= 0} ? '+' : '') + ${#numbers.formatDecimal(portfolio.portfolioChangePercent, 0, 'NONE', 2, 'POINT')} + '%'">
+                            +1.23%
+                        </span>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -144,10 +159,14 @@
                     <td><span th:text="${stock.shortname}"></span></td>
                     <td><span th:text="${stock.symbol}"></span></td>
                     <td><span th:text="${stock.count}"></span></td>
-                    <td><span th:text="${#numbers.formatDecimal((stock.cost * stock.count), 0, 'COMMA', 2, 'POINT')} + ' ' + ${stock.wallet}"></span></td>
-                    <td><span th:if="${stock.predict != null}" class="text-decoration-underline" th:text="${stock.predict.getValue()}"
+                    <td><span
+                            th:text="${#numbers.formatDecimal((stock.cost * stock.count), 0, 'COMMA', 2, 'POINT')} + ' ' + ${stock.wallet}"></span>
+                    </td>
+                    <td><span th:if="${stock.predict != null}" class="text-decoration-underline"
+                              th:text="${stock.predict.getValue()}"
                               th:classappend="${stock.predict.getValue() == 'Покупать' ? 'text-success' :
-                                        (stock.predict.getValue() == 'Продавать' ? 'text-danger' : 'text-gray')}">-</span></td>
+                                        (stock.predict.getValue() == 'Продавать' ? 'text-danger' : 'text-gray')}">-</span>
+                    </td>
                 </tr>
                 </tbody>
             </table>
