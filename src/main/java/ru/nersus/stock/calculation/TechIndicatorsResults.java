@@ -16,6 +16,7 @@ public class TechIndicatorsResults {
             List<Double> closePrices = prices.stream().map(Candle::close).toList();
             List<Double> lowPrices = prices.stream().map(Candle::low).toList();
             List<Double> highPrices = prices.stream().map(Candle::high).toList();
+            List<Double> volumes = prices.stream().map(Candle::volume).toList();
             Double close = prices.getLast().close();
             Double oldClose = prices.getFirst().close();
 
@@ -27,7 +28,8 @@ public class TechIndicatorsResults {
                     momentum(close, oldClose),
                     williams(lowPrices, highPrices, close),
                     vhf(closePrices),
-                    mfi(closePrices)
+                    mfi(highPrices, lowPrices, closePrices, volumes, 14),
+                    massIndex(highPrices, lowPrices)
             );
         }
         return null;
@@ -111,51 +113,89 @@ public class TechIndicatorsResults {
         return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
     }
 
-    public static IndicatorValue momentum(double close, double oldClose) {//momentum
+    public static IndicatorValue momentum(double close, double oldClose) {
         double resRaw = TechIndicatorsRaw.momentum(close, oldClose);
 
-        if (resRaw >= 80) {
-            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        if (resRaw > 0) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);  // Восходящий моментум
+        } else if (resRaw < 0) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw); // Нисходящий моментум
+        } else {
+            return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw); // Нет изменений
         }
-        if (resRaw <= 20) {
-            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
-        }
-        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
     }
 
-    public static IndicatorValue williams(List<Double> low, List<Double> high, double close) {//Уильямса процентный диапазон
+    public static IndicatorValue williams(List<Double> low, List<Double> high, double close) {
         double resRaw = TechIndicatorsRaw.williams(low, high, close);
 
-        if (resRaw >= 80) {
-            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        if (resRaw >= -20) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw); // Перекупленность
         }
-        if (resRaw <= 20) {
-            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+        if (resRaw <= -80) {
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);  // Перепроданность
         }
         return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
     }
 
-    public static IndicatorValue vhf(List<Double> closes) {//Вертикальный горизонтальный фильтр
+    public static IndicatorValue vhf(List<Double> closes) {
         double resRaw = TechIndicatorsRaw.vhf(closes);
 
+        if (resRaw == 0.0) {
+            return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
+        }
+
+        if (resRaw > 0.6) {
+            // Сильный тренд — определяем направление по последним ценам
+            double firstPrice = closes.get(0);
+            double lastPrice = closes.get(closes.size() - 1);
+
+            if (lastPrice > firstPrice) {
+                return new IndicatorValue(IndicatorPredict.BUY, resRaw);  // Сильный восходящий тренд
+            } else {
+                return new IndicatorValue(IndicatorPredict.SELL, resRaw); // Сильный нисходящий тренд
+            }
+        } else if (resRaw < 0.3) {
+            return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw); // Флэт, нет тренда
+        } else {
+            // Умеренный тренд — тоже определяем направление
+            double firstPrice = closes.get(0);
+            double lastPrice = closes.get(closes.size() - 1);
+
+            if (lastPrice > firstPrice) {
+                return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+            } else {
+                return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+            }
+        }
+    }
+
+    public static IndicatorValue mfi(List<Double> highs, List<Double> lows,
+                                     List<Double> closes, List<Double> volumes, int period) {
+        double resRaw = TechIndicatorsRaw.mfi(highs, lows, closes, volumes, period);
+
+        // MFI: выше 80 — перекупленность, ниже 20 — перепроданность
         if (resRaw >= 80) {
-            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw); // Перекупленность → SELL
         }
         if (resRaw <= 20) {
-            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+            return new IndicatorValue(IndicatorPredict.BUY, resRaw);  // Перепроданность → BUY
         }
         return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
     }
 
-    public static IndicatorValue mfi(List<Double> closes) {//Вертикальный горизонтальный фильтр
-        double resRaw = TechIndicatorsRaw.mfi(closes);
+    public static IndicatorValue massIndex(List<Double> highs, List<Double> lows) {//Индекс массы
+        double resRaw = TechIndicatorsRaw.massIndex(highs, lows);
 
-        if (resRaw >= 80) {
-            return new IndicatorValue(IndicatorPredict.SELL, resRaw);
+        if (resRaw == 0.0) {
+            return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
         }
-        if (resRaw <= 20) {
-            return new IndicatorValue(IndicatorPredict.BUY, resRaw);
+
+        if (resRaw >= 27.0) {
+            return new IndicatorValue(IndicatorPredict.SELL, resRaw); // Возможный разворот вниз
+        } else if (resRaw <= 26.5 && resRaw >= 25.0) {
+            return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw); // Подтверждение разворота
+        } else {
+            return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw); // Нет сигнала
         }
-        return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw);
     }
 }

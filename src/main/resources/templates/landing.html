@@ -267,6 +267,26 @@
                         <td th:text="${landing.indicators.momentum.predict.getValue()}"></td>
                         <td th:text="${landing.indicators.momentum.rawValue}"></td>
                     </tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
+                        <td scope="row">Процентный диапазон Уильямса</td>
+                        <td th:text="${landing.indicators.williams.predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.williams.rawValue}"></td>
+                    </tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
+                        <td scope="row">Вертикальный горизонтальный фильтр</td>
+                        <td th:text="${landing.indicators.vhf.predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.vhf.rawValue}"></td>
+                    </tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
+                        <td scope="row">Индекс денежных потоков</td>
+                        <td th:text="${landing.indicators.mfi.predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.mfi.rawValue}"></td>
+                    </tr>
+                    <tr th:if="${landing.indicators?.rsi != null}">
+                        <td scope="row">Индекс массы</td>
+                        <td th:text="${landing.indicators.massIndex.predict.getValue()}"></td>
+                        <td th:text="${landing.indicators.massIndex.rawValue}"></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

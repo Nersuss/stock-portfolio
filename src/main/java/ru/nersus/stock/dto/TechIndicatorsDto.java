@@ -2,6 +2,7 @@ package ru.nersus.stock.dto;
 
 import ru.nersus.stock.calculation.IndicatorPredict;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record TechIndicatorsDto(
@@ -13,7 +14,7 @@ public record TechIndicatorsDto(
         IndicatorValue williams,
         IndicatorValue vhf,
         IndicatorValue mfi,
-//        IndicatorValue massIndex,
+        IndicatorValue massIndex,
 
         IndicatorValue generalPredict
 ) {
@@ -25,9 +26,28 @@ public record TechIndicatorsDto(
                              IndicatorValue momentum,
                              IndicatorValue williams,
                              IndicatorValue vhf,
-                             IndicatorValue mfi) {
-        this(emas, smas, stochastic, rsi, momentum, williams, vhf, mfi,
-                calculateGeneralPredict(stochastic, rsi, momentum, williams, vhf, mfi));
+                             IndicatorValue mfi,
+                             IndicatorValue massIndex) {
+        this(emas, smas, stochastic, rsi, momentum, williams, vhf, mfi, massIndex,
+                calculateGeneralPredict(mergeAllIndicators(smas, emas, stochastic, rsi, momentum, williams, vhf, mfi, massIndex)));
+    }
+
+    private static IndicatorValue[] mergeAllIndicators(
+            List<IndicatorValue> smaValues,
+            List<IndicatorValue> emaValues,
+            IndicatorValue... otherIndicators) {
+
+        List<IndicatorValue> all = new ArrayList<>();
+        all.addAll(smaValues);
+        all.addAll(emaValues);
+
+        for (IndicatorValue indicator : otherIndicators) {
+            if (indicator != null) {
+                all.add(indicator);
+            }
+        }
+
+        return all.toArray(new IndicatorValue[0]);
     }
 
     private static IndicatorValue calculateGeneralPredict(IndicatorValue... indicators) {
