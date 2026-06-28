@@ -157,7 +157,6 @@ public class TechIndicatorsResults {
         } else if (resRaw < 0.3) {
             return new IndicatorValue(IndicatorPredict.NEUTRAL, resRaw); // Флэт, нет тренда
         } else {
-            // Умеренный тренд — тоже определяем направление
             double firstPrice = closes.get(0);
             double lastPrice = closes.get(closes.size() - 1);
 
@@ -173,7 +172,6 @@ public class TechIndicatorsResults {
                                      List<Double> closes, List<Double> volumes, int period) {
         double resRaw = TechIndicatorsRaw.mfi(highs, lows, closes, volumes, period);
 
-        // MFI: выше 80 — перекупленность, ниже 20 — перепроданность
         if (resRaw >= 80) {
             return new IndicatorValue(IndicatorPredict.SELL, resRaw); // Перекупленность → SELL
         }

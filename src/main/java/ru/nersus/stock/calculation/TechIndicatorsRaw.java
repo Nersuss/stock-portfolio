@@ -8,7 +8,6 @@ public class TechIndicatorsRaw {
         Map<Integer, Double> results = new HashMap<>();
         for (int period : periods) {
             if (closePrices.size() >= period) {
-                // Берем последние N значений
                 List<Double> lastNPrices = closePrices.subList(
                         closePrices.size() - period,
                         closePrices.size()
@@ -31,9 +30,7 @@ public class TechIndicatorsRaw {
         Map<Integer, Double> results = new HashMap<>();
         for (int period : periods) {
             if (closePrices.size() >= period) {
-                // Береем последние N + period значений для расчета EMA
-                // Нужно period значений для инициализации + еще немного для расчета
-                int neededSize = period * 2; // минимум period для SMA + period для EMA
+                int neededSize = period * 2;
                 List<Double> recentPrices;
 
                 if (closePrices.size() >= neededSize) {
@@ -62,14 +59,12 @@ public class TechIndicatorsRaw {
 
         double multiplier = 2.0 / (period + 1);
 
-        // Первое значение EMA = SMA за первые period значений из переданного списка
         double sum = 0.0;
         for (int i = 0; i < period; i++) {
             sum += prices.get(i);
         }
         double ema = sum / period;
 
-        // Расчет EMA для остальных значений
         for (int i = period; i < prices.size(); i++) {
             ema = (prices.get(i) - ema) * multiplier + ema;
         }
@@ -133,14 +128,11 @@ public class TechIndicatorsRaw {
 
         int period = closes.size();
 
-        // Находим максимум и минимум за период
         double highestClose = Collections.max(closes);
         double lowestClose = Collections.min(closes);
 
-        // Числитель: абсолютная разница между максимумом и минимумом
         double numerator = Math.abs(highestClose - lowestClose);
 
-        // Знаменатель: сумма абсолютных разниц между соседними ценами
         double denominator = 0.0;
         for (int i = 1; i < closes.size(); i++) {
             denominator += Math.abs(closes.get(i) - closes.get(i - 1));
@@ -166,11 +158,9 @@ public class TechIndicatorsRaw {
         List<Double> negativeMoneyFlow = new ArrayList<>();
 
         for (int i = 1; i < closes.size(); i++) {
-            // Типичная цена
             double typicalPrice = (highs.get(i) + lows.get(i) + closes.get(i)) / 3.0;
             double previousTypicalPrice = (highs.get(i - 1) + lows.get(i - 1) + closes.get(i - 1)) / 3.0;
 
-            // Денежный поток
             double moneyFlow = typicalPrice * volumes.get(i);
 
             if (typicalPrice > previousTypicalPrice) {
@@ -185,7 +175,6 @@ public class TechIndicatorsRaw {
             }
         }
 
-        // Берем последние period значений
         int startIndex = Math.max(0, positiveMoneyFlow.size() - period);
 
         double sumPositiveFlow = 0.0;
@@ -197,7 +186,7 @@ public class TechIndicatorsRaw {
         }
 
         if (sumNegativeFlow == 0) {
-            return 100.0; // Если нет отрицательного потока, MFI = 100
+            return 100.0;
         }
 
         double moneyRatio = sumPositiveFlow / sumNegativeFlow;
