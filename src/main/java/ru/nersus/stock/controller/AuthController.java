@@ -2,6 +2,8 @@ package ru.nersus.stock.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.nersus.stock.dto.LoginDto;
+import ru.nersus.stock.jwt.JwtRp;
 import ru.nersus.stock.service.AuthService;
 
 @Controller
@@ -29,6 +32,15 @@ public class AuthController {
         return "login";
     }
 
+    @PostMapping("/login")
+    @Operation(summary = "Вход в аккаунт")
+    String login(@ModelAttribute("loginDto") LoginDto loginDto, HttpServletResponse response) {
+        JwtRp jwtRp = authService.loginUser(loginDto);
+        response.addCookie(new Cookie("accessToken", jwtRp.accessToken()));
+        response.addCookie(new Cookie("refreshToken", jwtRp.refreshToken()));
+        return "redirect:/";
+    }
+
     @GetMapping("/register")
     @Operation(
             summary = "Получение страницы регистрации нового аккаунта",
@@ -43,8 +55,10 @@ public class AuthController {
             summary = "Регистрация пользователя на основе введенных данных",
             description = "Метод осуществляет регистрацию пользователя в системе"
     )
-    String registration(@ModelAttribute("loginDto") LoginDto loginDto) {
-        authService.registerUser(loginDto);
+    String registration(@ModelAttribute("loginDto") LoginDto loginDto, HttpServletResponse response) {
+        JwtRp jwtRp = authService.registerUser(loginDto);
+        response.addCookie(new Cookie("accessToken", jwtRp.accessToken()));
+        response.addCookie(new Cookie("refreshToken", jwtRp.refreshToken()));
         return "redirect:/login";
     }
 

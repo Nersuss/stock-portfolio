@@ -40,7 +40,7 @@ public class UserDao {
         );
     }
 
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> getByEmail(String email) {
         @Language("SQL")
         String sql = """
                 SELECT id, email, password FROM public.users u WHERE u.email = :email;
@@ -54,17 +54,28 @@ public class UserDao {
         return users.stream().findFirst();
     }
 
-    public void registerUser(RegisterRqDto registerRqDto) {
+    public void registerUser(RegisterRqDto registerRqDto, String refreshToken) {
         @Language("SQL")
         String sql = """
-                INSERT INTO public.users (email, password) VALUES (:email, :password);
+                INSERT INTO public.users (email, password, token) VALUES (:email, :password, :refreshToken);
                 """;
         jdbcTemplate.update(sql,
                 new MapSqlParameterSource()
                         .addValue("email", registerRqDto.login())
-                        .addValue("password", bCryptPasswordEncoder().encode(registerRqDto.password()
-                                )
-                        )
+                        .addValue("password", bCryptPasswordEncoder().encode(registerRqDto.password()))
+                        .addValue("refreshToken", refreshToken)
+        );
+    }
+
+    public void updateRefreshToken(String login, String refreshToken) {
+        @Language("SQL")
+        String sql = """
+                UPDATE public.users SET token = :refreshToken WHERE email = :login;
+                """;
+        jdbcTemplate.update(sql,
+                new MapSqlParameterSource()
+                        .addValue("login", login)
+                        .addValue("refreshToken", refreshToken)
         );
     }
 
