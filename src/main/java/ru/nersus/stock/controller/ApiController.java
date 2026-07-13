@@ -31,7 +31,7 @@ public class ApiController {
         if (symbols != null) {
             return symbols;
         }
-        throw new NullPointerException();
+        throw new IllegalArgumentException();
     }
 
 }

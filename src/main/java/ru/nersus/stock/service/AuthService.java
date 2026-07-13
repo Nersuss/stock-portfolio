@@ -10,6 +10,7 @@ import ru.nersus.stock.dao.UserDao;
 import ru.nersus.stock.dto.LoginDto;
 import ru.nersus.stock.dto.RegisterRqDto;
 import ru.nersus.stock.entity.User;
+import ru.nersus.stock.exception.UserAlreadyExistsException;
 import ru.nersus.stock.jwt.JwtProvider;
 import ru.nersus.stock.jwt.JwtRp;
 
@@ -26,8 +27,7 @@ public class AuthService {
 
     public JwtRp registerUser(LoginDto loginDto) {
         if (userDao.getByEmail(loginDto.email()).isPresent()) {
-            System.out.println("User already registered");
-            throw new UsernameNotFoundException("User already registered");
+            throw new UserAlreadyExistsException("User already registered");
         }
         String refreshToken = jwtProvider.generateRefreshToken(loginDto.email());
         int id = userDao.registerUser(
@@ -43,7 +43,7 @@ public class AuthService {
     public JwtRp loginUser(LoginDto loginDto) {
         Optional<User> user = userDao.getByEmail(loginDto.email());
         if (user.isEmpty() || !bCryptPasswordEncoder.matches(loginDto.password(), user.get().password())) {
-            throw new RuntimeException();
+            throw new UsernameNotFoundException("User not found");
         }
 
         String accessToken = jwtProvider.generateAccessToken(loginDto.email(), user.get().id());
