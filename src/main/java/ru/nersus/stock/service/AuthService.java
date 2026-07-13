@@ -30,13 +30,13 @@ public class AuthService {
             throw new UsernameNotFoundException("User already registered");
         }
         String refreshToken = jwtProvider.generateRefreshToken(loginDto.email());
-        userDao.registerUser(
+        int id = userDao.registerUser(
                 new RegisterRqDto(
                         loginDto.email(),
                         loginDto.password()),
                 refreshToken
         );
-        String accessToken = jwtProvider.generateAccessToken(loginDto.email());
+        String accessToken = jwtProvider.generateAccessToken(loginDto.email(), id);
         return new JwtRp(accessToken, refreshToken);
     }
 
@@ -46,7 +46,7 @@ public class AuthService {
             throw new RuntimeException();
         }
 
-        String accessToken = jwtProvider.generateAccessToken(loginDto.email());
+        String accessToken = jwtProvider.generateAccessToken(loginDto.email(), user.get().id());
         String refreshToken = jwtProvider.generateRefreshToken(loginDto.email());
         userDao.updateRefreshToken(loginDto.email(), refreshToken);
 

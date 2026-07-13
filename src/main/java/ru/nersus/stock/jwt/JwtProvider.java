@@ -29,12 +29,13 @@ public class JwtProvider {
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
     }
 
-    public String generateAccessToken(String email) {
+    public String generateAccessToken(String email, int id) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
                 .subject(email)
+                .id(String.valueOf(id))
                 .expiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .compact();

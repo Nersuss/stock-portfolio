@@ -7,7 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,17 +28,25 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain fc)
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain fc)
             throws IOException, ServletException {
-        if (WebUtils.getCookie(request, "accessToken") != null)
-        {
+        if (WebUtils.getCookie(request, "accessToken") != null) {
             String token = Objects.requireNonNull(WebUtils.getCookie(request, "accessToken")).getValue();
             if (token != null && jwtProvider.validateAccessToken(token)) {
                 final Claims claims = jwtProvider.getAccessClaims(token);
                 JwtAuthentication jwtAuthentication = new JwtAuthentication();
                 jwtAuthentication.setUsername(claims.getSubject());
                 jwtAuthentication.setAuthenticated(true);
-                SecurityContextHolder.getContext().setAuthentication(jwtAuthentication);
+                jwtAuthentication.setId(Integer.parseInt(claims.getId()));
+
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        jwtAuthentication,
+                        null,
+                        null
+                );
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
         fc.doFilter(request, response);

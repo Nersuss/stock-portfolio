@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.entity.Stock;
+import ru.nersus.stock.jwt.JwtAuthentication;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class StockDao {
         );
     }
 
-    public void deleteStockById(int id, MyUserDetails myUserDetails) {
+    public void deleteStockById(int id, JwtAuthentication myUserDetails) {
         @Language("SQL")
         String sql = """
                 DELETE FROM public.stock s WHERE s.id = :id;

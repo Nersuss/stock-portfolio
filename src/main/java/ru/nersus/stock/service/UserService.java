@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.calculation.IndicatorPredict;
 import ru.nersus.stock.calculation.TechIndicatorsResults;
-import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.dao.MoexApi;
 import ru.nersus.stock.dao.StockDao;
 import ru.nersus.stock.dto.AddStockDto;
@@ -17,6 +16,7 @@ import ru.nersus.stock.dto.api.SecurityDescription;
 import ru.nersus.stock.dto.api.StockPrice;
 import ru.nersus.stock.entity.Stock;
 import ru.nersus.stock.enums.PeriodEnum;
+import ru.nersus.stock.jwt.JwtAuthentication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class UserService {
     MoexApi moexApi;
     StockService stockService;
 
-    public void addStockByEmail(AddStockDto addStockDto, MyUserDetails myUserDetails) {
+    public void addStockByEmail(AddStockDto addStockDto, JwtAuthentication myUserDetails) {
         stockDao.addByUserId(
                 new Stock(null,
                         addStockDto.symbol(),
@@ -82,7 +82,7 @@ public class UserService {
         return new PortfolioDto(currentPortfolioCost, stockDtos, portfolioChange, portfolioChangePercent);
     }
 
-    public void deleteStockById(int id, MyUserDetails myUserDetails) {
+    public void deleteStockById(int id, JwtAuthentication myUserDetails) {
         stockDao.deleteStockById(id, myUserDetails);
     }
 }

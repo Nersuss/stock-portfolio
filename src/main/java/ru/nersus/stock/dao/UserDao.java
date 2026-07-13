@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.nersus.stock.dto.RegisterRqDto;
@@ -54,17 +56,21 @@ public class UserDao {
         return users.stream().findFirst();
     }
 
-    public void registerUser(RegisterRqDto registerRqDto, String refreshToken) {
+    public int registerUser(RegisterRqDto registerRqDto, String refreshToken) {
         @Language("SQL")
         String sql = """
                 INSERT INTO public.users (email, password, token) VALUES (:email, :password, :refreshToken);
                 """;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql,
                 new MapSqlParameterSource()
                         .addValue("email", registerRqDto.login())
                         .addValue("password", bCryptPasswordEncoder().encode(registerRqDto.password()))
-                        .addValue("refreshToken", refreshToken)
+                        .addValue("refreshToken", refreshToken),
+                keyHolder,
+                new String[]{"id"}
         );
+        return keyHolder.getKey().intValue();
     }
 
     public void updateRefreshToken(String login, String refreshToken) {

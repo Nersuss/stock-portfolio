@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.nersus.stock.config.MyUserDetails;
 import ru.nersus.stock.dto.AddStockDto;
 import ru.nersus.stock.dto.LandingDto;
 import ru.nersus.stock.dto.PortfolioDto;
 import ru.nersus.stock.enums.PeriodEnum;
+import ru.nersus.stock.jwt.JwtAuthentication;
 import ru.nersus.stock.service.StockService;
 import ru.nersus.stock.service.UserService;
 
@@ -78,7 +78,7 @@ public class MainController {
             summary = "Добавление акции в портфель",
             description = "Метод позволяет добавить выбранную акцию в портфель пользователя"
     )
-    String addStock(@ModelAttribute("addStockDto") AddStockDto addStockDto, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+    String addStock(@ModelAttribute("addStockDto") AddStockDto addStockDto, @AuthenticationPrincipal JwtAuthentication myUserDetails) {
         userService.addStockByEmail(addStockDto, myUserDetails);
         return "redirect:/portfolio";
     }
@@ -88,7 +88,7 @@ public class MainController {
             summary = "Удаление акции из портфеля",
             description = "Метод удаляет выбранную акцию из портфеля"
     )
-    String deleteStock(@RequestParam int id, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+    String deleteStock(@RequestParam int id, @AuthenticationPrincipal JwtAuthentication myUserDetails) {
         userService.deleteStockById(id, myUserDetails);
         return "redirect:/portfolio/edit";
     }
