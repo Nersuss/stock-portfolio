@@ -22,6 +22,7 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v7
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -31,12 +32,12 @@ jobs:
 
         name: Setup Gradle
       - uses: gradle/actions/setup-gradle@v6
+
       - name: Build with Gradle
         run: ./gradlew build
 
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build
+      - name: Build dockerfile
         run: docker build .
+
+      - name: Build docker-compose
+        run: docker compose up --build
