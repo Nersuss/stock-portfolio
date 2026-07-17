@@ -1,0 +1,32 @@
+name: Pipeline
+run-name: ${{ github.actor }} is testing out GitHub Actions
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: checkout@v7
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - run: java --version
+
+        name: Setup Gradle
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build with Gradle
+        run: ./gradlew build
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: checkout@v7
+      - name: Build
+        run: docker build .
