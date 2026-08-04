@@ -30,6 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain fc)
             throws IOException, ServletException {
+        log.info("Enter to JwtFilter");
         if (WebUtils.getCookie(request, "accessToken") != null) {
             String token = Objects.requireNonNull(WebUtils.getCookie(request, "accessToken")).getValue();
             if (token != null && jwtProvider.validateAccessToken(token)) {
@@ -47,6 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                log.info("Success jwt token validation");
             }
         }
         fc.doFilter(request, response);

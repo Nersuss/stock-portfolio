@@ -3,6 +3,7 @@ package ru.nersus.stock.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nersus.stock.calculation.IndicatorPredict;
 import ru.nersus.stock.calculation.TechIndicatorsResults;
@@ -24,6 +25,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserService {
 
     StockDao stockDao;
@@ -38,6 +40,7 @@ public class UserService {
                         addStockDto.count(),
                         myUserDetails.getId()
                 ));
+        log.info("Add stock by email. Symbol: {}, Email: {}", addStockDto.symbol(), myUserDetails.getName());
     }
 
     public PortfolioDto getPortfolio(String email, PeriodEnum period) {
@@ -84,5 +87,6 @@ public class UserService {
 
     public void deleteStockById(int id, JwtAuthentication myUserDetails) {
         stockDao.deleteStockById(id, myUserDetails);
+        log.info("Delete stock by id. id: {}, Email: {}", id, myUserDetails.getName());
     }
 }

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Rest-контроллер для отправки запросов к внешнему API", description = "")
+@Slf4j
 public class ApiController {
     StockService stockService;
 
@@ -31,6 +33,7 @@ public class ApiController {
         if (symbols != null) {
             return symbols;
         }
+        log.warn("Error in search companies by substring. Query: {}", query);
         throw new IllegalArgumentException();
     }
 
