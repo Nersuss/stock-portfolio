@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 jobs:
 
