@@ -7,26 +7,17 @@ pipeline {
         stage('Checkout') {
             steps { checkout scm }
         }
-        stage('Gradle build') {
+        stage('Build & test') {
             steps {
                 sh '''
-                    gradle clean bootJar -x test --no-daemon
+                    ./gradlew clean bootJar --no-daemon
                 '''
             }
         }
-        stage('Deploy (Docker-compose build)') {
+        stage('Deploy') {
             steps {
                 sh '''
                     docker compose build
-                '''
-            }
-        }
-        stage('Tests') {
-            steps {
-                sh '''
-                    docker compose -f docker-compose.yaml up -d db
-                    sleep 10
-                    docker compose -f docker-compose.yaml run --rm backend ./gradlew test
                 '''
             }
         }

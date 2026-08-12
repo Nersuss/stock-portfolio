@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ru.nersus.stock.calculation.TechIndicatorsRaw.calculateEMA;
 import static ru.nersus.stock.calculation.TechIndicatorsRaw.calculateSMA;
 
@@ -14,7 +15,7 @@ class StockApplicationTests {
 
     @Test
     void contextLoads() {
-
+        assertNull("");
     }
 
     @Test
