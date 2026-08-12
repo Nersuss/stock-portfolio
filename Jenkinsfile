@@ -26,7 +26,7 @@ pipeline {
                 sh '''
                     docker compose -f docker-compose.yaml up -d db
                     sleep 10
-                    docker compose -f docker-compose.yaml run --rm backend gradle test
+                    docker compose -f docker-compose.yaml run --rm backend ./gradlew test
                 '''
             }
         }
