@@ -24,7 +24,9 @@ pipeline {
         stage('Tests') {
             steps {
                 sh '''
-                    gradle test
+                    docker-compose -f docker-compose.ci.yml up -d db
+                    sleep 10
+                    docker-compose -f docker-compose.ci.yml run --rm app gradle test
                 '''
             }
         }
