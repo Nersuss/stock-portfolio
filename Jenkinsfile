@@ -10,7 +10,7 @@ pipeline {
         stage('Build & test') {
             steps {
                 sh '''
-                    ./gradlew clean bootJar --no-daemon
+                    ./gradlew build
                 '''
             }
         }
