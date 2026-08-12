@@ -19,13 +19,13 @@ pipeline {
                 '''
             }
         }
-        stage('Docker build') {
-            steps {
-                sh '''
-                    docker build -t stock .
-                '''
-            }
-        }
+//         stage('Docker build') {
+//             steps {
+//                 sh '''
+//                     docker build -t stock .
+//                 '''
+//             }
+//         }
         stage('Docker-compose build') {
             steps {
                 sh '''
