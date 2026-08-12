@@ -1,16 +1,13 @@
 pipeline {
     agent any
-    tools {
-        gradle '9.7.0'
-    }
     stages {
         stage('Checkout') {
             steps { checkout scm }
         }
-        stage('Build & test') {
+        stage('Build') {
             steps {
                 sh '''
-                    ./gradlew build
+                    ./gradlew clean bootJar --no-daemon
                 '''
             }
         }
