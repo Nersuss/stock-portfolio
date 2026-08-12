@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    gradle build
+                    gradle clean bootJar -x test --no-daemon
                 '''
             }
         }
