@@ -19,24 +19,19 @@ pipeline {
                 '''
             }
         }
-//         stage('Docker build') {
-//             steps {
-//                 sh '''
-//                     docker build -t stock .
-//                 '''
-//             }
-//         }
-        stage('Docker-compose build') {
+        stage('Deploy (Docker-compose build)') {
             steps {
                 sh '''
                     docker compose build
                 '''
             }
         }
-//         stage('Tests') {
-//             steps {
-//                 echo 'Tests...'
-//             }
-//         }
+        stage('Tests') {
+            steps {
+                sh '''
+                    gradle test
+                '''
+            }
+        }
     }
 }
